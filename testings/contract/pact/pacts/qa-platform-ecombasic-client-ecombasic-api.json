@@ -1,0 +1,99 @@
+{
+  "consumer": {
+    "name": "qa-platform-ecombasic-client"
+  },
+  "provider": {
+    "name": "ecombasic-api"
+  },
+  "interactions": [
+    {
+      "description": "a login request with valid credentials",
+      "providerState": "a registered EcomBasic user exists with valid credentials",
+      "request": {
+        "method": "POST",
+        "path": "/auth/login",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "userEmail": "rbridge@gmail.com",
+          "userPassword": "Rb123456"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": {
+          "message": "Login Successfully",
+          "token": "abc123tokenvalue",
+          "userId": "5f9d1234abcd5e6f7890abcd"
+        },
+        "matchingRules": {
+          "$.body.token": {
+            "match": "regex",
+            "regex": "^\\S+$"
+          },
+          "$.body.userId": {
+            "match": "regex",
+            "regex": "^\\S+$"
+          }
+        }
+      }
+    },
+    {
+      "description": "a create-order request for a valid product",
+      "providerState": "an authenticated user and a valid product id",
+      "request": {
+        "method": "POST",
+        "path": "/order/create-order",
+        "headers": {
+          "Authorization": "abc123tokenvalue",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "orders": [
+            {
+              "country": "India",
+              "productOrderedId": "60d21b4667d0d8992e610c85"
+            }
+          ]
+        },
+        "matchingRules": {
+          "$.headers.Authorization": {
+            "match": "regex",
+            "regex": "^\\S+$"
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+        },
+        "body": {
+          "message": "Order Placed Successfully",
+          "orders": [
+            "a1b2c3d4e5f6"
+          ]
+        },
+        "matchingRules": {
+          "$.body.orders": {
+            "min": 1
+          },
+          "$.body.orders[*].*": {
+            "match": "type"
+          },
+          "$.body.orders[*]": {
+            "match": "regex",
+            "regex": "^\\S+$"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}

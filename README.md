@@ -24,6 +24,14 @@ Working today:
   (`testings/performance/k6/`).
 - **API testing** — a Robot Framework + RequestsLibrary suite validating a
   practice API against JSON Schema (`testings/api/rest/`).
+- **Contract testing** — a pact-python consumer suite covering the same
+  login + create-order happy path as the API suite above, publishable to
+  the Pact Broker (`testings/contract/pact/consumer/`). Provider-side
+  verification isn't scaffolded — see that domain's README for why.
+- **Disaster recovery** — a Robot Framework suite that simulates a Loki
+  outage, verifies recovery within an RTO budget, and confirms no data loss
+  (RPO) (`testings/dr/`). Robot Framework + Python only for now; Playwright/
+  TypeScript coverage is a deliberate later pass.
 - **CI/CD** — mirrored Azure Pipelines and GitHub Actions definitions for the
   gates above (`pipelines/azure/`, `.github/workflows/`).
 - **AI layer** — a set of specialist subagents (QE lead, API, automation,
@@ -32,9 +40,9 @@ Working today:
   and Codex (`ai/`).
 
 Scaffolded (README only, no implementation yet): GUI automation with
-Playwright/TypeScript, contract testing (Pact), accessibility (WCAG 2.1 AA),
-disaster recovery/resilience testing, most of `platform/` (orchestration,
-reporting, test-data, utilities), and all of `compliance/`.
+Playwright/TypeScript, contract testing's provider side (Pact), accessibility
+(WCAG 2.1 AA), most of `platform/` (orchestration, reporting, test-data,
+utilities), and all of `compliance/`.
 
 ## Repository layout
 
