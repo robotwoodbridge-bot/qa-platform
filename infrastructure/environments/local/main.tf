@@ -73,6 +73,19 @@ module "runner_robot_mobile" {
   enable_kvm              = var.enable_kvm
 }
 
+module "runner_robot_api" {
+  source = "../../modules/runner-robot-api"
+
+  network_name        = module.network.qa_net_name
+  dockerfile_path     = "${local.docker_dir}/Dockerfile.robot-api"
+  build_context_path  = local.repo_root
+  # Mount the whole api/ folder (not just rest/) so protocol suites can
+  # reference ../../shared/ resources, same reasoning as runner_robot_web.
+  mount_path           = "${local.repo_root}/testings/api"
+  image_name          = "qa-platform-robot-api-runner"
+  container_name      = "qa-platform-robot-api-runner"
+}
+
 module "runner_k6" {
   source = "../../modules/runner-k6"
 

@@ -1,0 +1,10 @@
+# Robot Framework + RequestsLibrary — pure HTTP API suites (REST/GraphQL/etc.).
+# No browser, no Docker socket, nothing beyond the Python HTTP stack — these
+# suites talk directly to the API under test.
+FROM python:3.12-slim
+
+WORKDIR /qa-platform
+COPY infrastructure/docker/requirements-robot-api.txt ./
+RUN pip install --no-cache-dir -r requirements-robot-api.txt
+
+CMD ["tail", "-f", "/dev/null"]

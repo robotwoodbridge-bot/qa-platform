@@ -4,9 +4,9 @@
 # the qa-platform-security-runner container.
 # =============================================================================
 # Usage:
-#   ./scripts/run_security.sh               → scan staging (default)
-#   ./scripts/run_security.sh staging       → explicit environment target
-#   ./scripts/run_security.sh production    → scan production environment
+#   ./scripts/run_security.sh                                    → scan the suite's default target
+#   ./scripts/run_security.sh https://staging.example.com         → explicit target URL
+#   ./scripts/run_security.sh https://staging.example.com HIGH    → target + severity threshold
 #
 # Prerequisites:
 #   Infra stack must be up: cd infrastructure/environments/local && terraform apply
@@ -18,13 +18,14 @@
 # modules/runner-security/README.md for the isolation tradeoff that
 # accepts.
 #
-# Expects testings/security/kali_scan.robot + testings/security/... keywords
-# to exist. If they're not there yet, migrate them from
-# temp/tests/security/kali_scan.robot and temp/keywords/security.robot first.
+# Nikto pull removed: it runs natively via Kali's own apt package now, not
+# a docker-pulled image — see testings/security/README.md for why
+# (frapsoft/nikto's bundled Nikto doesn't support this target's SNI-based
+# routing).
 #
 # Output:
-#   testings/security/zap/reports/  → raw JSON/XML reports from ZAP, Nikto, Nmap
-#   testings/security/results/      → Robot Framework execution log
+#   testings/security/results/security/  → raw JSON/CSV/XML reports from ZAP, Nikto, Nmap
+#   testings/security/results/           → Robot Framework execution log
 # =============================================================================
 
 set -euo pipefail
@@ -32,13 +33,16 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
-ENVIRONMENT=${1:-"staging"}
 CONTAINER="qa-platform-security-runner"
 OUTPUT_DIR="results"
+VARIABLE_ARGS=()
+[ -n "${1:-}" ] && VARIABLE_ARGS+=(--variable "TARGET_URL:${1}")
+[ -n "${2:-}" ] && VARIABLE_ARGS+=(--variable "FAIL_ON_SEVERITY:${2}")
 
 echo "=============================================="
 echo "  QA Platform — Security Scan Runner"
-echo "  Environment : ${ENVIRONMENT}"
+echo "  Target      : ${1:-<suite default>}"
+echo "  Fail on     : ${2:-<suite default>}"
 echo "=============================================="
 
 if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
@@ -48,17 +52,16 @@ if ! docker ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
   exit 1
 fi
 
-echo "Pulling scan tool images..."
+echo "Pulling scan tool images (ZAP, Nmap — Nikto runs natively, no pull needed)..."
 docker pull ghcr.io/zaproxy/zaproxy:stable --quiet
-docker pull frapsoft/nikto                  --quiet
 docker pull instrumentisto/nmap             --quiet
 
 docker exec "${CONTAINER}" robot \
   --outputdir "${OUTPUT_DIR}" \
-  --variable ENVIRONMENT:"${ENVIRONMENT}" \
+  ${VARIABLE_ARGS[@]+"${VARIABLE_ARGS[@]}"} \
   --loglevel INFO \
   --consolecolors on \
-  --name "Security Scan — ${ENVIRONMENT}" \
+  --name "Security Scan" \
   tests/
 
 echo ""

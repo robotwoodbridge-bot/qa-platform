@@ -1,0 +1,164 @@
+# =============================================================================
+# GitHub Actions — Security Scan Pipeline
+# =============================================================================
+# Mirror of pipelines/azure/security-pipeline.yml.
+#
+# REWRITTEN from the original temp/.github design, not just a path swap —
+# see pipelines/azure/security-pipeline.yml's header comment and
+# pipelines/README.md for the full reasoning. Short version: the original
+# ran Robot Framework natively on the runner and pulled frapsoft/nikto,
+# which the security gate debugging (testings/security/README.md) found
+# too old to work against this target and replaced with Nikto running
+# natively inside qa-platform-security-runner's Kali image — a bare
+# ubuntu-latest runner has no `nikto` binary at all. This workflow now
+# provisions the real infra and execs into that container instead.
+#
+# Phase rollout:
+#   Phase 1: Scaffold — manual trigger only
+#   Phase 2: Baseline run — continue-on-error: true (non-blocking, record findings)
+#   Phase 3: Threshold enforcement — remove continue-on-error, set failOnSeverity HIGH
+#   Phase 4: Pre-release full scan — extend kali_scan.robot with a "full" mode
+#
+# Required secrets: GRAFANA_ADMIN_PASSWORD, PACT_BROKER_DB_PASSWORD,
+# GMAIL_USER, GMAIL_APP_PASSWORD
+# =============================================================================
+
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+    # Limit automatic triggers to security-related changes.
+    # Phase 3: remove this filter to enforce the gate on every push.
+    paths:
+      - testings/security/**
+      - scripts/run_security.sh
+      - infrastructure/modules/runner-security/**
+      - infrastructure/docker/Dockerfile.security
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      targetUrl:
+        description: Target URL
+        type: string
+        default: https://practice.expandtesting.com
+      failOnSeverity:
+        description: Fail On Severity
+        type: choice
+        default: MEDIUM
+        options:
+          - LOW
+          - MEDIUM
+          - HIGH
+          - CRITICAL
+
+env:
+  TF_VERSION: "1.8.5"
+  TF_DIR: ${{ github.workspace }}/infrastructure/environments/local
+  RESULTS_DIR: ${{ github.workspace }}/testings/security/results
+  CONTAINER: qa-platform-security-runner
+  TARGET_URL: ${{ inputs.targetUrl || 'https://practice.expandtesting.com' }}
+  FAIL_ON_SEVERITY: ${{ inputs.failOnSeverity || 'MEDIUM' }}
+
+jobs:
+  # -------------------------------------------------------------------------
+  # continue-on-error: true during Phase 1 & 2 — non-blocking.
+  # Phase 3: remove continue-on-error from both the job and the scan step.
+  # -------------------------------------------------------------------------
+  security-scan:
+    name: Vulnerability Scans (ZAP / Nikto / Nmap)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    continue-on-error: true   # Phase 3: remove this line
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Terraform ${{ env.TF_VERSION }}
+        run: |
+          INSTALLED=$(terraform version -json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['terraform_version'])" 2>/dev/null || echo "none")
+          if [ "$INSTALLED" = "${TF_VERSION}" ]; then
+            echo "Terraform ${TF_VERSION} already present — skipping install."
+          else
+            echo "Installing Terraform ${TF_VERSION}..."
+            curl -fsSL "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip" -o /tmp/terraform.zip
+            unzip -q /tmp/terraform.zip -d /tmp
+            sudo mv /tmp/terraform /usr/local/bin/terraform
+          fi
+          terraform version
+
+      - name: Terraform init
+        run: terraform -chdir="${TF_DIR}" init -input=false
+
+      # grafana_admin_password / pact_broker_db_password have no default —
+      # required even though this workflow only cares about the security
+      # runner, because apply provisions the whole local stack (no
+      # per-module apply is used anywhere in this repo's pipelines).
+      - name: Terraform apply (start IaC stack)
+        run: terraform -chdir="${TF_DIR}" apply -auto-approve -input=false
+        env:
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+          TF_VAR_pact_broker_db_password: ${{ secrets.PACT_BROKER_DB_PASSWORD }}
+
+      - name: Wait for container ready
+        run: |
+          echo "Waiting for ${CONTAINER} to be running..."
+          STATUS="missing"
+          for i in $(seq 1 20); do
+            STATUS=$(docker inspect --format='{{.State.Status}}' "${CONTAINER}" 2>/dev/null || echo "missing")
+            echo "  attempt $i: $STATUS"
+            [ "$STATUS" = "running" ] && break
+            sleep 3
+          done
+          if [ "$STATUS" != "running" ]; then
+            echo "ERROR: Container did not start in time"
+            exit 1
+          fi
+
+      # kali_scan.robot's TARGET_URL / FAIL_ON_SEVERITY suite variables are
+      # overridable via --variable, same as running it locally via
+      # scripts/run_security.sh.
+      - name: Run security scan suite
+        continue-on-error: true   # Phase 3: remove this line
+        run: |
+          mkdir -p "${RESULTS_DIR}"
+          docker exec "${CONTAINER}" robot \
+            --outputdir results \
+            --variable TARGET_URL:"${TARGET_URL}" \
+            --variable FAIL_ON_SEVERITY:"${FAIL_ON_SEVERITY}" \
+            --loglevel INFO \
+            --name "Security Scan" \
+            tests/
+
+      - name: Terraform destroy (tear down IaC stack)
+        if: always()
+        run: terraform -chdir="${TF_DIR}" destroy -auto-approve -input=false
+        env:
+          TF_VAR_grafana_admin_password: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
+          TF_VAR_pact_broker_db_password: ${{ secrets.PACT_BROKER_DB_PASSWORD }}
+
+      - name: Publish RF report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-rf-report
+          path: ${{ env.RESULTS_DIR }}/report.html
+
+      # Raw scan output (ZAP JSON, Nikto CSV, Nmap XML)
+      - name: Publish raw scan findings
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-raw-findings
+          path: ${{ env.RESULTS_DIR }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: ./.github/actions/notify-on-failure
+        with:
+          pipeline-name: "Security Scan"
+          artifact-dir: ${{ env.RESULTS_DIR }}
+          gmail-user: ${{ secrets.GMAIL_USER }}
+          gmail-app-password: ${{ secrets.GMAIL_APP_PASSWORD }}

@@ -1,0 +1,4 @@
+robotframework>=7.0
+robotframework-requests>=0.9
+jsonschema>=4.0
+allure-robotframework>=2.13

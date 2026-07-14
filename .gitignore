@@ -50,6 +50,7 @@ allure-results/
 output.xml
 log.html
 report.html
+temp/
 
 # --- Misc ---
 *.tgz
