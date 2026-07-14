@@ -1,0 +1,4 @@
+robotframework>=7.0
+robotframework-browser>=18.0
+robotframework-pabot>=2.18
+allure-robotframework>=2.13

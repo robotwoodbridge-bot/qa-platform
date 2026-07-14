@@ -1,0 +1,10 @@
+# Robot Framework + AppiumLibrary client. Does NOT run the emulator itself —
+# it drives the Appium server exposed by the qa-platform-android-emulator container
+# (see modules/runner-robot-mobile).
+FROM python:3.12-slim
+
+WORKDIR /qa-platform
+COPY infrastructure/docker/requirements-robot-mobile.txt ./
+RUN pip install --no-cache-dir -r requirements-robot-mobile.txt
+
+CMD ["tail", "-f", "/dev/null"]

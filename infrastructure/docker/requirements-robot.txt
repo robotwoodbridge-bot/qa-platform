@@ -1,0 +1,4 @@
+# DEPRECATED — split into requirements-robot-web.txt and
+# requirements-robot-mobile.txt. The actual stack is robotframework-browser
+# (Playwright-based), not SeleniumLibrary. Kept only so nothing that still
+# points at this filename hard-fails; do not add new deps here.

@@ -1,0 +1,42 @@
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/terraform.tfstate
+infra/terraform/terraform.tfstate.backup
+infra/terraform/.terraform.lock.hcl
+infra/terraform/override.tf
+infra/terraform/override.tf.json
+
+# Project-specific
+.claude.json
+.DS_Store
+.vscode
+.codex/config.toml
+results/
+reports/
+temp/
+*.html
+*.pdf
+*.png
+*.xml
+*.zip
+*copy*
+*.log
+playwright-log.txt
+
+
+# pyenv
+# .python-version
+
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+browser/
+
+# AI MD files not yet ready, ignore for now until I scrub them
+ai/*

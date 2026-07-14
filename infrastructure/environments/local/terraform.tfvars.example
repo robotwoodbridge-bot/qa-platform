@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars (git-ignored) and fill in real values.
+# Do NOT commit real passwords — this is a stand-in until platform/secrets
+# is wired up to a real secrets backend.
+
+grafana_admin_password  = "changeme"
+pact_broker_db_password = "changeme"
+
+# enable_kvm = true   # only if the host exposes /dev/kvm

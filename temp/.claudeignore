@@ -1,0 +1,14 @@
+__pycache__
+results
+.DS_Store
+.venv
+.vscode
+*.html
+*.pdf
+*.png
+*.xml
+*.zip
+/*.csv
+/*.xlsx
+results
+*.log

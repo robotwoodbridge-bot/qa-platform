@@ -1,0 +1,10 @@
+# Web GUI runner — Playwright/TypeScript (per standards/tech-stack.md).
+FROM mcr.microsoft.com/playwright:v1.48.0-jammy
+
+WORKDIR /qa-platform
+
+# Uncomment once testing/gui/playwright has a package.json:
+# COPY testing/gui/playwright/package*.json ./
+# RUN npm ci
+
+CMD ["tail", "-f", "/dev/null"]

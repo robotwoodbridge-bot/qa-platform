@@ -1,0 +1,16 @@
+# Robot Framework + Browser library (robotframework-browser) — Playwright
+# under the hood via a Node.js side-car. This is NOT SeleniumLibrary —
+# see infrastructure/README.md for why this changed from the original
+# scaffold, and requirements-robot-web.txt for the actual dependency.
+FROM mcr.microsoft.com/playwright:v1.48.0-jammy
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      python3 python3-pip xvfb \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /qa-platform
+COPY infrastructure/docker/requirements-robot-web.txt ./
+RUN pip3 install --no-cache-dir -r requirements-robot-web.txt \
+    && rfbrowser init
+
+CMD ["tail", "-f", "/dev/null"]

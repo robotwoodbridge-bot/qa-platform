@@ -1,0 +1,38 @@
+# Kali + OWASP ZAP. Runs on the isolated security network by default —
+# see modules/runner-security/README.md before attaching it to anything else.
+#
+# Also installs the Docker CLI + Robot Framework: security.robot's ZAP and
+# Nmap keywords shell out `docker run --rm` per scan (ephemeral containers)
+# via Robot's Process library, rather than using the zaproxy/nmap binaries
+# installed below. Requires /var/run/docker.sock mounted in (see
+# runner-security/main.tf) — accepted tradeoff, see runner-security/README.md.
+#
+# Nikto is the exception — it runs natively via the apt package below, NOT
+# via docker run. The frapsoft/nikto Docker Hub image bundles a 2017-era
+# Nikto (v2.1.5) whose old SSL handling doesn't send SNI, which breaks
+# against any modern multi-tenant edge that routes by SNI (e.g. Fly.io,
+# Cloudflare) — every scan failed with "No web server found" regardless of
+# flags. Kali's own nikto package is current and doesn't have this problem.
+FROM kalilinux/kali-rolling
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      zaproxy nmap nikto python3 python3-pip curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Docker CLI only (talks to the host daemon via the socket mounted above) —
+# installed as the official static binary rather than the docker.io apt
+# package, which didn't reliably provide a working `docker` on PATH from
+# Kali's rolling repos.
+ARG DOCKER_CLI_VERSION=27.3.1
+RUN curl -fsSL "https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_CLI_VERSION}.tgz" \
+      -o /tmp/docker.tgz \
+    && tar -xzf /tmp/docker.tgz -C /tmp \
+    && mv /tmp/docker/docker /usr/local/bin/docker \
+    && chmod +x /usr/local/bin/docker \
+    && rm -rf /tmp/docker.tgz /tmp/docker
+
+WORKDIR /qa-platform
+COPY infrastructure/docker/requirements-robot-security.txt ./
+RUN pip3 install --no-cache-dir -r requirements-robot-security.txt --break-system-packages
+
+CMD ["tail", "-f", "/dev/null"]
