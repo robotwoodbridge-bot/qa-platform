@@ -20,14 +20,25 @@ where a new gate needs to be added on each platform.
 Both platforms mirror the same gate names 1:1 so the two are easy to keep
 in sync:
 
-| Gate        | Azure                                | GitHub Actions                          |
-|-------------|---------------------------------------|------------------------------------------|
-| Smoke (IaC) | azure/smoke-pipeline.yml              | .github/workflows/smoke-pipeline.yml     |
-| API contract| azure/contract-pipeline.yml           | .github/workflows/contract-pipeline.yml  |
-| Performance | azure/performance-pipeline.yml        | .github/workflows/performance-pipeline.yml |
-| Load (k6)   | azure/load-pipeline.yml               | .github/workflows/load-pipeline.yml      |
-| Security    | azure/security-pipeline.yml           | .github/workflows/security-pipeline.yml  |
-| Notify      | azure/templates/notify-on-failure.yml | .github/actions/notify-on-failure/       |
+| Gate          | Azure                                  | GitHub Actions                            |
+|---------------|-----------------------------------------|--------------------------------------------|
+| Smoke (IaC)   | azure/smoke-pipeline.yml                | .github/workflows/smoke-pipeline.yml       |
+| API contract  | azure/contract-pipeline.yml             | .github/workflows/contract-pipeline.yml    |
+| Pact contract | azure/pact-pipeline.yml                 | .github/workflows/pact-pipeline.yml        |
+| Performance   | azure/performance-pipeline.yml          | .github/workflows/performance-pipeline.yml |
+| Load (k6)     | azure/load-pipeline.yml                 | .github/workflows/load-pipeline.yml        |
+| Security      | azure/security-pipeline.yml             | .github/workflows/security-pipeline.yml    |
+| Pentest       | azure/pentest-pipeline.yml              | .github/workflows/pentest-pipeline.yml     |
+| Accessibility | azure/accessibility-pipeline.yml        | .github/workflows/accessibility-pipeline.yml |
+| Disaster recovery | azure/dr-pipeline.yml                | .github/workflows/dr-pipeline.yml          |
+| Notify        | azure/templates/notify-on-failure.yml   | .github/actions/notify-on-failure/         |
+
+Note on naming: "API contract" (`contract-pipeline.yml`) predates "Pact
+contract" (`pact-pipeline.yml`) and the two names are easy to confuse —
+`contract-pipeline.yml` runs `testings/api/rest/` (JSON Schema validation of
+a single API's own responses), not `testings/contract/pact/` (Pact's
+consumer-driven contract testing between two services). See
+testings/api/rest/README.md and testings/contract/pact/README.md.
 
 ## Migration notes (temp/ci + temp/.github → here)
 

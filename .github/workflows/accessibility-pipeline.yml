@@ -1,0 +1,126 @@
+# =============================================================================
+# GitHub Actions — Accessibility Suite (WCAG 2.1 AA)
+# =============================================================================
+# Mirror of pipelines/azure/accessibility-pipeline.yml.
+#
+# Runs the axe-core suite (testings/accessibility/tests/) directly on the
+# runner — same shape as performance-pipeline.yml (also Browser library /
+# Playwright), which already established that these suites don't need the
+# Docker/Terraform stack to run in CI, just the browser installed locally.
+#
+# Runs nightly (trend data / catch the third-party page changing under us)
+# and on pushes that touch accessibility-related files.
+#
+# Required secrets: GMAIL_USER, GMAIL_APP_PASSWORD
+# =============================================================================
+
+name: Accessibility Suite
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - testings/accessibility/**
+      - .github/workflows/accessibility-pipeline.yml
+  pull_request:
+    branches: [main]
+  schedule:
+    # Nightly run at 02:30 UTC — same rationale as performance-pipeline.yml's
+    # nightly run: catch drift even with no code changes on our side.
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.12"
+  ACCESSIBILITY_DIR: ${{ github.workspace }}/testings/accessibility
+  RESULTS_DIR: ${{ github.workspace }}/testings/accessibility/results
+  ALLURE_DIR: ${{ github.workspace }}/testings/accessibility/results/allure-results
+
+jobs:
+  accessibility:
+    name: axe-core (WCAG 2.1 AA)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      # Same Browser library stack as testings/gui/robot/web — this engine
+      # reuses that image's dependency set (infrastructure/docker/Dockerfile.robot-web).
+      - name: Install Python dependencies
+        run: pip install -r infrastructure/docker/requirements-robot-web.txt
+
+      - name: Install Playwright browsers + Browser library node deps
+        run: |
+          playwright install --with-deps chromium
+          python -m Browser.entry init
+
+      # axe-core isn't committed to the repo (~700KB minified) — installed
+      # as a Node dependency (testings/accessibility/package.json) instead.
+      - name: Install axe-core
+        working-directory: ${{ env.ACCESSIBILITY_DIR }}
+        run: npm install --no-fund --no-audit
+
+      - name: Run accessibility suite
+        run: |
+          mkdir -p "${RESULTS_DIR}" "${ALLURE_DIR}"
+          python -m robot \
+            --outputdir "${RESULTS_DIR}" \
+            --variable HEADLESS_MODE:True \
+            --listener allure_robotframework:"${ALLURE_DIR}" \
+            --loglevel INFO \
+            --name "Accessibility Suite" \
+            testings/accessibility/tests/
+
+      - name: Publish Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-accessibility
+          path: ${{ env.ALLURE_DIR }}
+
+      - name: Publish RF logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robot-logs-accessibility
+          path: ${{ env.RESULTS_DIR }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: ./.github/actions/notify-on-failure
+        with:
+          pipeline-name: "Accessibility Suite"
+          artifact-dir: ${{ env.RESULTS_DIR }}
+          gmail-user: ${{ secrets.GMAIL_USER }}
+          gmail-app-password: ${{ secrets.GMAIL_APP_PASSWORD }}
+
+  report:
+    name: Generate Allure HTML Report
+    runs-on: ubuntu-latest
+    needs: accessibility
+    if: always()
+
+    steps:
+      - name: Download Allure results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-accessibility
+          path: allure-results
+
+      - name: Generate Allure HTML report
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results --clean -o allure-report
+
+      - name: Publish Allure HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-accessibility
+          path: allure-report

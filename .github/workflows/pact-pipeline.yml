@@ -1,0 +1,92 @@
+# =============================================================================
+# GitHub Actions — Pact Contract Tests
+# =============================================================================
+# Mirror of pipelines/azure/pact-pipeline.yml.
+#
+# Runs the EcomBasic consumer-side Pact suite (testings/contract/pact/consumer/)
+# directly on the runner. No Docker/Terraform stack needed — pact-python's
+# mock service is a self-contained pip-installed binary, same reasoning as
+# contract-pipeline.yml (testings/api/rest) needing no infra either.
+#
+# Not named "contract-pipeline.yml" — that name was already taken by the
+# testings/api/rest suite (JSON Schema validation of a single API's own
+# responses), a different concern from Pact's consumer-driven contract
+# testing between two services. See testings/contract/pact/README.md and
+# testings/api/rest/README.md for why those two stay separate.
+#
+# This is pytest, not Robot Framework, so unlike the other pipelines here
+# there's no Allure listener/report job — the actual deliverable worth
+# publishing is the generated pact file itself. "Notify on failure" still
+# fires on a test failure, just without a log.html attachment (the action
+# already degrades gracefully when one isn't found).
+#
+# No broker-publish step: the Pact Broker (infrastructure/modules/pact-broker)
+# only runs via local Terraform-managed Docker (see infrastructure/README.md's
+# "Terraform state is local" note) — nothing for a hosted GitHub runner to
+# reach yet. Publish manually via scripts/run_pact_consumer.sh --publish from
+# a machine with the broker up.
+# =============================================================================
+
+name: Pact Contract Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - testings/contract/pact/consumer/**
+      - .github/workflows/pact-pipeline.yml
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  CONSUMER_DIR: ${{ github.workspace }}/testings/contract/pact/consumer
+  RESULTS_DIR: ${{ github.workspace }}/testings/contract/pact/results
+  PACTS_DIR: ${{ github.workspace }}/testings/contract/pact/pacts
+
+jobs:
+  pact-consumer:
+    name: pact-python (consumer)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install consumer test dependencies
+        run: pip install -r testings/contract/pact/consumer/requirements.txt
+
+      - name: Run consumer contract tests
+        run: |
+          mkdir -p "${RESULTS_DIR}"
+          pytest "${CONSUMER_DIR}" -v --junitxml="${RESULTS_DIR}/junit.xml"
+
+      - name: Publish generated pact file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-file
+          path: ${{ env.PACTS_DIR }}
+          if-no-files-found: warn
+
+      - name: Publish pytest results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results-pact
+          path: ${{ env.RESULTS_DIR }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: ./.github/actions/notify-on-failure
+        with:
+          pipeline-name: "Pact Contract Tests"
+          artifact-dir: ${{ env.RESULTS_DIR }}
+          gmail-user: ${{ secrets.GMAIL_USER }}
+          gmail-app-password: ${{ secrets.GMAIL_APP_PASSWORD }}
