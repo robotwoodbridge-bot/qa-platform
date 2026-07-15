@@ -62,6 +62,22 @@ module "runner_robot_web" {
   container_name      = "qa-platform-robot-web-runner"
 }
 
+module "runner_accessibility" {
+  source = "../../modules/runner-robot-web"
+
+  network_name = module.network.qa_net_name
+  # Same image logic as runner_robot_web (Browser library / Playwright) — axe-core
+  # scans need a real browser, and this is the stack that already has one built
+  # and working. Separate container + mount path (not shared with runner_robot_web)
+  # so this engine stays independently testable/deployable, same as every other
+  # runner here — see testings/accessibility/README.md.
+  dockerfile_path     = "${local.docker_dir}/Dockerfile.robot-web"
+  build_context_path  = local.repo_root
+  mount_path          = "${local.repo_root}/testings/accessibility"
+  image_name          = "qa-platform-accessibility-runner"
+  container_name      = "qa-platform-accessibility-runner"
+}
+
 module "runner_robot_mobile" {
   source = "../../modules/runner-robot-mobile"
 

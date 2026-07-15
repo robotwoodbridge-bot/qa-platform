@@ -67,6 +67,26 @@ as live source to build from.
 
 ## Known gotchas (don't re-debug these)
 
+- **Rebuilding a runner image after changing its `requirements-*.txt`/Dockerfile
+  doesn't reliably pick up the new image.** Every `runner-*` module uses the
+  same pattern: a `null_resource.build` (triggers a `docker build` via
+  `local-exec` when the Dockerfile/requirements hash changes) plus a separate
+  `docker_image.this` resource that tracks the image by tag name, with
+  `docker_container.this` referencing `docker_image.this.image_id`. The
+  `docker_image` resource doesn't always re-read the tag after an out-of-band
+  rebuild — its `image_id` in state can stay pinned to the *previous* image
+  even though `null_resource.build` reports success and `docker_container.this`
+  gets recreated (confirmed while adding `robotframework-requests` to
+  `requirements-robot-security.txt`: the rebuilt image had the new package,
+  `terraform apply` replaced the container, but `docker inspect
+  qa-platform-security-runner --format '{{.Image}}'` still showed the *old*
+  image ID, and the new dependency wasn't importable at runtime). Fix: `terraform
+  apply -replace="module.<name>.docker_image.this"` to force it to pick up the
+  current image under that tag. Verify with `docker inspect <container>
+  --format '{{.Image}}'` against `docker images <tag> --format '{{.ID}}'`
+  after any requirements/Dockerfile-only change — don't assume a plain
+  `terraform apply` was sufficient just because it reported success.
+
 - **k6 container entrypoint:** `grafana/k6`'s image ships
   `ENTRYPOINT ["k6"]`. Don't try to clear it via Terraform's `entrypoint = []`
   — the docker provider appends `command` after the image entrypoint instead

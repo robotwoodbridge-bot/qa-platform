@@ -19,7 +19,9 @@ Working today:
   Playwright, Robot Framework (web + mobile + API), k6, security (Kali/ZAP),
   a Pact Broker, and an observability stack (Loki + Grafana).
 - **Security scanning** — ZAP baseline + Nikto + Nmap orchestrated via Robot
-  Framework (`testings/security/`).
+  Framework (`testings/security/`), plus hand-crafted exploit-attempt
+  regression tests (SQLi-style bypass, reflected XSS) against the login form
+  (`testings/security/pentest/`).
 - **Load testing** — a k6 login load test with smoke/load/stress profiles
   (`testings/performance/k6/`).
 - **API testing** — a Robot Framework + RequestsLibrary suite validating a
@@ -32,6 +34,10 @@ Working today:
   outage, verifies recovery within an RTO budget, and confirms no data loss
   (RPO) (`testings/dr/`). Robot Framework + Python only for now; Playwright/
   TypeScript coverage is a deliberate later pass.
+- **Accessibility (WCAG 2.1 AA)** — a Robot Framework + axe-core suite
+  scanning the practice login page, gated on critical violations
+  (`testings/accessibility/`). Robot Framework + Python only for now;
+  Playwright/TypeScript coverage is a deliberate later pass.
 - **CI/CD** — mirrored Azure Pipelines and GitHub Actions definitions for the
   gates above (`pipelines/azure/`, `.github/workflows/`).
 - **AI layer** — a set of specialist subagents (QE lead, API, automation,
@@ -40,9 +46,9 @@ Working today:
   and Codex (`ai/`).
 
 Scaffolded (README only, no implementation yet): GUI automation with
-Playwright/TypeScript, contract testing's provider side (Pact), accessibility
-(WCAG 2.1 AA), most of `platform/` (orchestration, reporting, test-data,
-utilities), and all of `compliance/`.
+Playwright/TypeScript, contract testing's provider side (Pact), most of
+`platform/` (orchestration, reporting, test-data, utilities), and all of
+`compliance/`.
 
 ## Repository layout
 

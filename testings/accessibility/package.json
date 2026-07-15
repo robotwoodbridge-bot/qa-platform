@@ -1,0 +1,8 @@
+{
+  "name": "qa-platform-accessibility",
+  "private": true,
+  "description": "axe-core dependency for the WCAG 2.1 AA accessibility suite (Robot Framework). Not committed to node_modules/ — installed by scripts/run_accessibility.sh.",
+  "dependencies": {
+    "axe-core": "^4.10.0"
+  }
+}

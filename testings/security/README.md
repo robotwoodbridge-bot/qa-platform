@@ -9,8 +9,12 @@
   SNI, which breaks against this target's Fly.io edge (routes by SNI).
 - zap/  — placeholder for a future native/ZAP-only engine (scans/tests/reports/rules/shared),
   separate from the combined Kali suite above. Currently empty.
+- pentest/  — hand-crafted exploit-attempt regression tests (SQLi-style bypass
+  attempts, reflected-XSS check), complementary to the ZAP/Nikto/Nmap scan above.
+  See pentest/README.md.
 
-Run via: ./scripts/run_security.sh [environment]
+Run via: ./scripts/run_security.sh [environment] (ZAP/Nikto/Nmap) or
+./scripts/run_pentest.sh (exploit attempts).
 
 ## Docker-outside-of-Docker path gotcha
 
@@ -67,5 +71,7 @@ SSL-cert-dump/robots.txt informational lines -> LOW, everything else
 authoritative mapping — revisit if it misclassifies something that matters.
 
 Deferred for later (placeholders, not yet scoped): SAST, dependency/SCA
-scanning, secrets scanning, pen-test evidence tracking. Some of these may
-tie into compliance/ for audit evidence rather than living purely here.
+scanning, secrets scanning. Pen-test evidence tracking has a first suite now
+(see pentest/README.md) but no findings/ write-up mechanism yet — nothing's
+been found that needs one. Some of these may tie into compliance/ for audit
+evidence rather than living purely here.
