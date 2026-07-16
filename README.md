@@ -80,8 +80,17 @@ qa-platform/
 ├── dashboards/           # (reserved, empty)
 ├── shared/               # (reserved, empty)
 ├── tools/                # (reserved, empty)
-└── scripts/              # ./run_*.sh entry points, one per engine
+├── scripts/              # ./run_*.sh entry points, one per engine
+└── temp/                 # Tracked scratch space — NOT platform architecture; see below
 ```
+
+`temp/` is tracked in git (kept in sync across machines/team, not gitignored)
+but isn't part of the platform's structure — don't assume something living
+there is platform code just because it's in this repo. It can hold anything
+from migration leftovers to unrelated personal projects (currently
+`temp/TypeScript/`, a personal TypeScript practice repo with no relation to
+this platform). Check a subfolder's own contents/README before building on
+anything found there.
 
 ## Prerequisites
 

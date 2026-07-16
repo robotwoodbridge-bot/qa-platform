@@ -3,6 +3,13 @@
 .vscode/
 .idea/
 
+# Exception: share TypeScript-tooling editor settings (e.g. the experimental
+# tsgo compiler flag) across machines/team for this repo's TypeScript
+# projects — temp/TypeScript/ now, testings/gui/playwright/ once that suite
+# exists. Everywhere else, .vscode/ stays personal/local as usual.
+!/temp/TypeScript/.vscode/
+!/testings/gui/playwright/.vscode/
+
 # --- Terraform ---
 **/.terraform/
 *.tfstate
@@ -50,7 +57,6 @@ allure-results/
 output.xml
 log.html
 report.html
-temp/
 
 # --- Misc ---
 *.tgz

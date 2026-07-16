@@ -24,10 +24,29 @@ describing intended scope with no implementation yet. Always check a
 directory's own README for its actual status before building on it or
 reporting on "existing" functionality that may not exist.
 
-`temp/` is gitignored, migration-source scratch space (the original flat
-repo layout this platform was restructured from) — not part of the platform.
-Several `README.md` files reference it for migration context; don't treat it
-as live source to build from.
+`temp/` is tracked in git (not gitignored) — general local scratch space,
+shared across machines/team via this repo's remote rather than kept purely
+local. It originally held the flat repo layout this platform was
+restructured from (several `README.md` files still reference it for that
+migration context) — that content has since been deleted. It can also hold
+things with no relation to this platform at all: `temp/TypeScript/` is a
+personal TypeScript practice/learning repo (own commit history on GitHub,
+not this platform's), kept here as a plain tracked folder — not its own
+nested `.git` — specifically so it syncs across machines. Don't treat
+anything under `temp/` as live source for platform code, and don't assume a
+folder found there is part of the platform's actual architecture — check
+its own contents/README before building on it.
+
+Note: the repo-wide `.gitignore` rules for `node_modules/` and `.DS_Store`
+still apply inside `temp/` (e.g. `temp/TypeScript/node_modules/` is still
+ignored, regenerate via `npm install` rather than expecting it to be there
+after a fresh clone) — only the blanket `temp/` exclusion itself was
+removed. `.vscode/` is a deliberate exception for TypeScript-tooling config
+worth sharing (e.g. the experimental tsgo compiler flag): `.gitignore`
+explicitly un-ignores `temp/TypeScript/.vscode/` and (pre-emptively, for
+when it exists) `testings/gui/playwright/.vscode/`, so those two stay
+tracked while `.vscode/` elsewhere in the repo stays personal/local as
+usual.
 
 ## Naming conventions
 
