@@ -1,0 +1,146 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: 13.33in 7.5in; margin: 0; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  color: #0f172a; background: #eef2f7;
+}
+.page {
+  width: 13.33in; height: 7.5in; position: relative; overflow: hidden;
+  background: #eef2f7; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.hdr {
+  background: linear-gradient(110deg, #1e3a8a 0%, #1d4ed8 62%, #3b82f6 100%);
+  color: #fff; padding: 16px 26px 15px; display: flex; align-items: center;
+  justify-content: space-between; position: relative;
+}
+.hdr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6); }
+.hdr .eyebrow { font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  opacity: .82; font-weight: 700; }
+.hdr h1 { font-size: 23px; font-weight: 800; letter-spacing: -.3px; margin-top: 3px; }
+.hdr .org { font-size: 11px; opacity: .85; margin-top: 4px; font-weight: 500; }
+.hdr .meta { text-align: right; font-size: 11px; line-height: 1.55; opacity: .92; }
+.hdr .meta b { font-weight: 700; }
+.statuspill { display:inline-flex; align-items:center; gap:7px; padding: 7px 15px;
+  border-radius: 999px; font-weight: 800; font-size: 13px; letter-spacing:.4px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); margin-top:7px;}
+.dot { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+.body { flex: 1; padding: 13px 18px 8px; display: flex; flex-direction: column; gap: 11px; }
+.row { display: flex; gap: 11px; }
+.col { display: flex; flex-direction: column; gap: 11px; }
+.card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 11px;
+  padding: 12px 14px; position: relative; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.card h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #64748b; font-weight: 700; margin-bottom: 9px; display:flex;
+  justify-content:space-between; align-items:center; }
+.card h3 .tag { font-size: 9px; letter-spacing:.4px; padding:2px 7px; border-radius:5px;
+  background:#eef2f7; color:#334155; font-weight:700; text-transform:none; }
+.kpi { flex:1; background: #ffffff; border:1px solid #e2e8f0; border-radius: 11px;
+  padding: 11px 13px; position: relative; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04);}
+.kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#1d4ed8; }
+.kpi .label { font-size: 9.5px; text-transform: uppercase; letter-spacing: .8px;
+  color: #64748b; font-weight: 700; }
+.kpi .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 3px; line-height:1; }
+.kpi .val small { font-size: 13px; font-weight: 700; color:#64748b; }
+.kpi .sub { font-size: 10px; color: #64748b; margin-top: 4px; font-weight:600; }
+.kpi .trend { position:absolute; top:11px; right:12px; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius: 6px; }
+.up { color:#15803d; background: #e7f6ec; } .down { color:#b91c1c; background:#fdeaea; }
+.flat { color:#64748b; background:#eef2f7; }
+table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+th { text-align: left; color: #64748b; font-weight: 700; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .6px; padding: 4px 7px; border-bottom: 1.5px solid #e2e8f0; }
+td { padding: 5px 7px; border-bottom: 1px solid #eaeef3; color: #334155; font-weight:500; }
+tr:last-child td { border-bottom: none; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9.5px; font-weight: 800; }
+.b-green{ background:#e7f6ec; color:#15803d;} .b-amber{ background:#fef3e2; color:#b45309;}
+.b-red{ background:#fdeaea; color:#b91c1c;} .b-blue{ background:#e6efff; color:#1d4ed8;}
+.b-grey{ background:#eef2f7; color:#334155;}
+.gate { display:flex; align-items:center; justify-content:space-between; padding: 6px 0;
+  border-bottom: 1px solid #eaeef3; font-size: 11px; }
+.gate:last-child{ border-bottom:none; }
+.gate .gname { font-weight:600; color:#334155; }
+.gate .gval { font-weight:800; color:#0f172a; font-variant-numeric: tabular-nums; }
+.legend { display:flex; gap:13px; flex-wrap:wrap; font-size:9.5px; color:#64748b; font-weight:600; margin-top:5px;}
+.legend span { display:flex; align-items:center; gap:5px; }
+.footer { display:flex; justify-content:space-between; align-items:center;
+  padding: 5px 22px 8px; font-size: 9px; color: #94a3b8; font-weight:600; letter-spacing:.3px; }
+.footer .conf { color:#b45309; }
+.bignum { font-variant-numeric: tabular-nums; }
+.hbar-track { background:#eef2f7; border-radius:6px; height:9px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:6px; }
+.note { font-size:9.5px; color:#64748b; line-height:1.5; }
+.ribbon { display:flex; gap:8px; }
+ul.clean { list-style:none; }
+ul.clean li { font-size:10.5px; color:#334155; padding:4px 0 4px 16px; position:relative; line-height:1.4; font-weight:500;}
+ul.clean li::before { content:""; position:absolute; left:0; top:9px; width:7px; height:7px; border-radius:2px; background:#3b82f6; }
+ul.clean li.win::before{ background:#22c55e; } ul.clean li.risk::before{ background:#f59e0b; }
+ul.clean li.watch::before{ background:#ef4444; }
+</style></head><body><div class="page">
+<div class="hdr">
+  <div>
+    <div class="eyebrow">Test Automation Engineering</div>
+    <h1>Automation Health Dashboard</h1>
+    <div class="org">Northwind Financial &nbsp;·&nbsp; Global Quality Engineering</div>
+  </div>
+  <div class="meta"><b>Suites:</b> 6 · 4,890 tests<br><b>Frameworks:</b> Robot + Playwright · pabot<br><div class="statuspill"><span class="dot" style="background:#22c55e"></span>HEALTHY</div></div>
+</div>
+<div class="body">
+    <div class="row">
+      <style>.kpi-5126::before{background:#1d4ed8}</style><div class="kpi kpi-5126"><div class="label">Automation Coverage</div><div class="val bignum">78<small>%</small></div><div class="sub">3,814 automated tests</div><div class="trend up">+11 pt</div></div>
+      <style>.kpi-6820::before{background:#15803d}</style><div class="kpi kpi-6820"><div class="label">Suite Stability</div><div class="val bignum">96.5<small>%</small></div><div class="sub">non-flaky pass rate</div><div class="trend up">+2.6 pt</div></div>
+      <style>.kpi-9620::before{background:#f59e0b}</style><div class="kpi kpi-9620"><div class="label">Flaky Tests</div><div class="val bignum">23</div><div class="sub">0.6% of suite · was 71</div><div class="trend up">-68%</div></div>
+      <style>.kpi-9408::before{background:#0d9488}</style><div class="kpi kpi-9408"><div class="label">Execution Time</div><div class="val bignum">19<small>m</small></div><div class="sub">4-way parallel (pabot)</div><div class="trend up">-44%</div></div>
+      <style>.kpi-9896::before{background:#7c3aed}</style><div class="kpi kpi-9896"><div class="label">CI/CD Pass Rate</div><div class="val bignum">98<small>%</small></div><div class="sub">last 50 pipeline runs</div><div class="trend up">+6 pt</div></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:.8"><h3>Coverage &amp; Stability</h3>
+        <div class="row" style="gap:6px"><svg viewBox="0 0 200 126" width="100%" style="max-height:126px">
+<path d="M22.0 100.0 A78.0 78.0 0 0 1 178.0 100.0" fill="none" stroke="#eef2f7" stroke-width="15" stroke-linecap="round"/>
+<path d="M22.0 100.0 A78.0 78.0 0 1 1 160.1 50.3" fill="none" stroke="#1d4ed8" stroke-width="15" stroke-linecap="round"/>
+<line x1="14.0" y1="100.0" x2="9.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/><line x1="39.2" y1="39.2" x2="35.7" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="100.0" y1="14.0" x2="100.0" y2="9.0" stroke="#94a3b8" stroke-width="1"/><line x1="160.8" y1="39.2" x2="164.3" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="186.0" y1="100.0" x2="191.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="100.0" y="94" text-anchor="middle" font-size="30" font-weight="800" fill="#0f172a">78%</text>
+<text x="100.0" y="112" text-anchor="middle" font-size="10" font-weight="700" fill="#64748b">Automation coverage</text>
+</svg><svg viewBox="0 0 200 126" width="100%" style="max-height:126px">
+<path d="M22.0 100.0 A78.0 78.0 0 0 1 178.0 100.0" fill="none" stroke="#eef2f7" stroke-width="15" stroke-linecap="round"/>
+<path d="M22.0 100.0 A78.0 78.0 0 1 1 177.5 91.4" fill="none" stroke="#15803d" stroke-width="15" stroke-linecap="round"/>
+<line x1="14.0" y1="100.0" x2="9.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/><line x1="39.2" y1="39.2" x2="35.7" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="100.0" y1="14.0" x2="100.0" y2="9.0" stroke="#94a3b8" stroke-width="1"/><line x1="160.8" y1="39.2" x2="164.3" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="186.0" y1="100.0" x2="191.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="100.0" y="94" text-anchor="middle" font-size="30" font-weight="800" fill="#0f172a">96.5%</text>
+<text x="100.0" y="112" text-anchor="middle" font-size="10" font-weight="700" fill="#64748b">Suite stability (pass)</text>
+</svg></div></div>
+      <div class="card" style="flex:1"><h3>Coverage by Test Layer (pyramid)</h3><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Unit</span><span class="bignum">91%</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:91%;background:#22c55e"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>API / Contract</span><span class="bignum">84%</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:84%;background:#3b82f6"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Integration</span><span class="bignum">72%</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:72%;background:#0d9488"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>UI / E2E</span><span class="bignum">61%</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:61%;background:#7c3aed"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Non-functional</span><span class="bignum">48%</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:48%;background:#f59e0b"></div></div></div>
+        <p class="note" style="margin-top:6px">Healthy distribution — heavy unit/API base, lean E2E tip.</p></div>
+      <div class="card" style="flex:1.1"><h3>Flaky-Test Rate <span class="tag">target ≤ 2%</span></h3><svg viewBox="0 0 420 158" width="100%"><line x1="38" y1="14.0" x2="406" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">5.0%</text><line x1="38" y1="43.5" x2="406" y2="43.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="46.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">3.8%</text><line x1="38" y1="73.0" x2="406" y2="73.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="76.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">2.5%</text><line x1="38" y1="102.5" x2="406" y2="102.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="105.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">1.2%</text><line x1="38" y1="132.0" x2="406" y2="132.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="135.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0.0%</text><line x1="38" y1="84.8" x2="406" y2="84.8" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="5 4"/><text x="406" y="80.8" text-anchor="end" font-size="8.5" fill="#b91c1c" font-weight="700">SLO 2%</text><path d="M38.0 42.3 L90.6 51.8 L143.1 58.8 L195.7 68.3 L248.3 80.1 L300.9 87.2 L353.4 96.6 L406.0 103.7 L406.0 132.0 L38.0 132.0 Z" fill="#f59e0b" opacity="0.10"/><path d="M38.0 42.3 L90.6 51.8 L143.1 58.8 L195.7 68.3 L248.3 80.1 L300.9 87.2 L353.4 96.6 L406.0 103.7" fill="none" stroke="#f59e0b" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="42.3" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="90.6" cy="51.8" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="143.1" cy="58.8" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="195.7" cy="68.3" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="248.3" cy="80.1" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="300.9" cy="87.2" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="353.4" cy="96.6" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="406.0" cy="103.7" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><text x="38.0" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W18</text><text x="90.6" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W19</text><text x="143.1" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W20</text><text x="195.7" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W21</text><text x="248.3" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W22</text><text x="300.9" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W23</text><text x="353.4" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W24</text><text x="406.0" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W25</text></svg></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:1"><h3>Test Execution Time (min)</h3><svg viewBox="0 0 420 158" width="100%"><line x1="38" y1="14.0" x2="406" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">130m</text><line x1="38" y1="43.5" x2="406" y2="43.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="46.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">98m</text><line x1="38" y1="73.0" x2="406" y2="73.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="76.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">65m</text><line x1="38" y1="102.5" x2="406" y2="102.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="105.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">32m</text><line x1="38" y1="132.0" x2="406" y2="132.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="135.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0m</text><path d="M38.0 101.1 L90.6 103.0 L143.1 104.8 L195.7 107.5 L248.3 109.3 L300.9 111.1 L353.4 112.9 L406.0 114.8" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="101.1" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="90.6" cy="103.0" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="143.1" cy="104.8" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="195.7" cy="107.5" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="248.3" cy="109.3" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="300.9" cy="111.1" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="353.4" cy="112.9" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="406.0" cy="114.8" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><path d="M38.0 23.1 L90.6 24.9 L143.1 24.0 L195.7 26.7 L248.3 27.6 L300.9 28.5 L353.4 30.3 L406.0 32.2" fill="none" stroke="#cbd5e1" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="23.1" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="90.6" cy="24.9" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="143.1" cy="24.0" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="195.7" cy="26.7" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="248.3" cy="27.6" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="300.9" cy="28.5" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="353.4" cy="30.3" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="406.0" cy="32.2" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><text x="38.0" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W18</text><text x="90.6" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W19</text><text x="143.1" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W20</text><text x="195.7" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W21</text><text x="248.3" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W22</text><text x="300.9" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W23</text><text x="353.4" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W24</text><text x="406.0" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W25</text></svg>
+        <div class="legend"><span><span class="dot" style="background:#1d4ed8"></span>Parallel 4-worker</span><span><span class="dot" style="background:#cbd5e1"></span>Serial-equiv</span></div></div>
+      <div class="card" style="flex:1"><h3>CI/CD Pipeline Pass Rate <span class="tag">goal ≥ 95%</span></h3><svg viewBox="0 0 420 158" width="100%"><line x1="34" y1="12.0" x2="408" y2="12.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="15.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">100%</text><line x1="34" y1="42.0" x2="408" y2="42.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="45.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">75%</text><line x1="34" y1="72.0" x2="408" y2="72.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="75.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">50%</text><line x1="34" y1="102.0" x2="408" y2="102.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="105.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">25%</text><line x1="34" y1="132.0" x2="408" y2="132.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="135.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0%</text><line x1="34" y1="18.0" x2="408" y2="18.0" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="5 4"/><rect x="42.9" y="21.6" width="29.0" height="110.4" rx="3" fill="#ef4444"/><text x="57.4" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W18</text><rect x="89.6" y="20.4" width="29.0" height="111.6" rx="3" fill="#ef4444"/><text x="104.1" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W19</text><rect x="136.4" y="22.8" width="29.0" height="109.2" rx="3" fill="#ef4444"/><text x="150.9" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W20</text><rect x="183.1" y="18.0" width="29.0" height="114.0" rx="3" fill="#22c55e"/><text x="197.6" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W21</text><rect x="229.9" y="16.8" width="29.0" height="115.2" rx="3" fill="#22c55e"/><text x="244.4" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W22</text><rect x="276.6" y="15.6" width="29.0" height="116.4" rx="3" fill="#22c55e"/><text x="291.1" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W23</text><rect x="323.4" y="14.4" width="29.0" height="117.6" rx="3" fill="#22c55e"/><text x="337.9" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W24</text><rect x="370.1" y="14.4" width="29.0" height="117.6" rx="3" fill="#22c55e"/><text x="384.6" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W25</text></svg></div>
+      <div class="card" style="flex:1.25"><h3>Top Flaky Tests — Triage Queue</h3>
+        <table><thead><tr><th>Test</th><th>Fails/100</th><th>Root cause</th><th>Status</th></tr></thead><tbody><tr><td style="font-family:monospace;font-size:9.5px">login_mfa_challenge.robot</td><td><b>9</b></td><td style="color:#64748b">Race on OTP field</td><td><span class="badge b-blue">Quarantined</span></td></tr><tr><td style="font-family:monospace;font-size:9.5px">statement_export_pdf.robot</td><td><b>6</b></td><td style="color:#64748b">Async download timing</td><td><span class="badge b-blue">Fix in review</span></td></tr><tr><td style="font-family:monospace;font-size:9.5px">dashboard_widgets_load.robot</td><td><b>5</b></td><td style="color:#64748b">3rd-party iframe</td><td><span class="badge b-blue">Retry+wait added</span></td></tr><tr><td style="font-family:monospace;font-size:9.5px">payments_idempotency.robot</td><td><b>4</b></td><td style="color:#64748b">Test data collision</td><td><span class="badge b-blue">Isolated data</span></td></tr><tr><td style="font-family:monospace;font-size:9.5px">search_autocomplete.robot</td><td><b>3</b></td><td style="color:#64748b">Debounce timing</td><td><span class="badge b-blue">Stabilized</span></td></tr></tbody></table></div>
+    </div></div>
+<div class="footer">
+  <span>Northwind Financial — Confidential · Quality Engineering Office of the VP</span>
+  <span class="conf">Coverage · Stability · Flake · Speed · CI</span>
+  <span>Q2 FY26 · Dashboard 3 of 6 · Data as of 28 Jun 2026</span>
+</div>
+</div></body></html>

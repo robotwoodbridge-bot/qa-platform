@@ -92,6 +92,20 @@ from migration leftovers to unrelated personal projects (currently
 this platform). Check a subfolder's own contents/README before building on
 anything found there.
 
+## TypeScript
+
+This repo standardizes on TypeScript 7.0.2 (the native/tsgo compiler) across
+every TS project it contains. Two root-level files support that:
+
+- `.vscode/settings.json` — enables the tsgo compiler in-editor. Tracked
+  deliberately (`.gitignore` has an explicit exception for it), since this
+  is the only `.vscode/settings.json` VS Code actually reads when the repo
+  root is opened as the workspace.
+- `tsconfig.base.json` — shared compiler options every TS project extends.
+  It isn't meant to build anything on its own; each project (e.g.
+  `temp/TypeScript/tsconfig.json`) has its own small `tsconfig.json` that
+  extends this and adds its own `rootDir`/`outDir`/`include`.
+
 ## Prerequisites
 
 - Docker

@@ -1,0 +1,132 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: 13.33in 7.5in; margin: 0; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  color: #0f172a; background: #eef2f7;
+}
+.page {
+  width: 13.33in; height: 7.5in; position: relative; overflow: hidden;
+  background: #eef2f7; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.hdr {
+  background: linear-gradient(110deg, #1e3a8a 0%, #1d4ed8 62%, #3b82f6 100%);
+  color: #fff; padding: 16px 26px 15px; display: flex; align-items: center;
+  justify-content: space-between; position: relative;
+}
+.hdr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6); }
+.hdr .eyebrow { font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  opacity: .82; font-weight: 700; }
+.hdr h1 { font-size: 23px; font-weight: 800; letter-spacing: -.3px; margin-top: 3px; }
+.hdr .org { font-size: 11px; opacity: .85; margin-top: 4px; font-weight: 500; }
+.hdr .meta { text-align: right; font-size: 11px; line-height: 1.55; opacity: .92; }
+.hdr .meta b { font-weight: 700; }
+.statuspill { display:inline-flex; align-items:center; gap:7px; padding: 7px 15px;
+  border-radius: 999px; font-weight: 800; font-size: 13px; letter-spacing:.4px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); margin-top:7px;}
+.dot { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+.body { flex: 1; padding: 13px 18px 8px; display: flex; flex-direction: column; gap: 11px; }
+.row { display: flex; gap: 11px; }
+.col { display: flex; flex-direction: column; gap: 11px; }
+.card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 11px;
+  padding: 12px 14px; position: relative; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.card h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #64748b; font-weight: 700; margin-bottom: 9px; display:flex;
+  justify-content:space-between; align-items:center; }
+.card h3 .tag { font-size: 9px; letter-spacing:.4px; padding:2px 7px; border-radius:5px;
+  background:#eef2f7; color:#334155; font-weight:700; text-transform:none; }
+.kpi { flex:1; background: #ffffff; border:1px solid #e2e8f0; border-radius: 11px;
+  padding: 11px 13px; position: relative; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04);}
+.kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#1d4ed8; }
+.kpi .label { font-size: 9.5px; text-transform: uppercase; letter-spacing: .8px;
+  color: #64748b; font-weight: 700; }
+.kpi .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 3px; line-height:1; }
+.kpi .val small { font-size: 13px; font-weight: 700; color:#64748b; }
+.kpi .sub { font-size: 10px; color: #64748b; margin-top: 4px; font-weight:600; }
+.kpi .trend { position:absolute; top:11px; right:12px; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius: 6px; }
+.up { color:#15803d; background: #e7f6ec; } .down { color:#b91c1c; background:#fdeaea; }
+.flat { color:#64748b; background:#eef2f7; }
+table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+th { text-align: left; color: #64748b; font-weight: 700; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .6px; padding: 4px 7px; border-bottom: 1.5px solid #e2e8f0; }
+td { padding: 5px 7px; border-bottom: 1px solid #eaeef3; color: #334155; font-weight:500; }
+tr:last-child td { border-bottom: none; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9.5px; font-weight: 800; }
+.b-green{ background:#e7f6ec; color:#15803d;} .b-amber{ background:#fef3e2; color:#b45309;}
+.b-red{ background:#fdeaea; color:#b91c1c;} .b-blue{ background:#e6efff; color:#1d4ed8;}
+.b-grey{ background:#eef2f7; color:#334155;}
+.gate { display:flex; align-items:center; justify-content:space-between; padding: 6px 0;
+  border-bottom: 1px solid #eaeef3; font-size: 11px; }
+.gate:last-child{ border-bottom:none; }
+.gate .gname { font-weight:600; color:#334155; }
+.gate .gval { font-weight:800; color:#0f172a; font-variant-numeric: tabular-nums; }
+.legend { display:flex; gap:13px; flex-wrap:wrap; font-size:9.5px; color:#64748b; font-weight:600; margin-top:5px;}
+.legend span { display:flex; align-items:center; gap:5px; }
+.footer { display:flex; justify-content:space-between; align-items:center;
+  padding: 5px 22px 8px; font-size: 9px; color: #94a3b8; font-weight:600; letter-spacing:.3px; }
+.footer .conf { color:#b45309; }
+.bignum { font-variant-numeric: tabular-nums; }
+.hbar-track { background:#eef2f7; border-radius:6px; height:9px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:6px; }
+.note { font-size:9.5px; color:#64748b; line-height:1.5; }
+.ribbon { display:flex; gap:8px; }
+ul.clean { list-style:none; }
+ul.clean li { font-size:10.5px; color:#334155; padding:4px 0 4px 16px; position:relative; line-height:1.4; font-weight:500;}
+ul.clean li::before { content:""; position:absolute; left:0; top:9px; width:7px; height:7px; border-radius:2px; background:#3b82f6; }
+ul.clean li.win::before{ background:#22c55e; } ul.clean li.risk::before{ background:#f59e0b; }
+ul.clean li.watch::before{ background:#ef4444; }
+</style></head><body><div class="page">
+<div class="hdr">
+  <div>
+    <div class="eyebrow">Reliability & SLO Operations</div>
+    <h1>Production Reliability Dashboard</h1>
+    <div class="org">Northwind Financial &nbsp;·&nbsp; Global Quality Engineering</div>
+  </div>
+  <div class="meta"><b>Scope:</b> Atlas production · 7 services<br><b>SLO window:</b> 30-day rolling<br><div class="statuspill"><span class="dot" style="background:#22c55e"></span>SLO MET</div></div>
+</div>
+<div class="body">
+    <div class="row">
+      <style>.kpi-6599::before{background:#15803d}</style><div class="kpi kpi-6599"><div class="label">Availability</div><div class="val bignum">99.95<small>%</small></div><div class="sub">SLO 99.9% · 21.9m downtime</div><div class="trend up">met 6 mo</div></div>
+      <style>.kpi-4202::before{background:#1d4ed8}</style><div class="kpi kpi-4202"><div class="label">MTTR</div><div class="val bignum">42<small>m</small></div><div class="sub">mean time to restore</div><div class="trend up">-46%</div></div>
+      <style>.kpi-1757::before{background:#0d9488}</style><div class="kpi kpi-1757"><div class="label">MTBF</div><div class="val bignum">18.4<small>d</small></div><div class="sub">mean time between failures</div><div class="trend up">+5.1d</div></div>
+      <style>.kpi-1053::before{background:#f59e0b}</style><div class="kpi kpi-1053"><div class="label">Error Budget</div><div class="val bignum">38<small>%</small></div><div class="sub">remaining this window</div><div class="trend flat">on track</div></div>
+      <style>.kpi-4695::before{background:#7c3aed}</style><div class="kpi kpi-4695"><div class="label">Incidents (Jun)</div><div class="val bignum">4</div><div class="sub">0 Sev1 · 1 Sev2 · 3 Sev3</div><div class="trend up">-43%</div></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:.85"><h3>Availability &amp; Error Budget</h3>
+        <div class="row" style="gap:6px"><svg viewBox="0 0 200 126" width="100%" style="max-height:126px">
+<path d="M22.0 100.0 A78.0 78.0 0 0 1 178.0 100.0" fill="none" stroke="#eef2f7" stroke-width="15" stroke-linecap="round"/>
+<path d="M22.0 100.0 A78.0 78.0 0 1 1 178.0 99.9" fill="none" stroke="#15803d" stroke-width="15" stroke-linecap="round"/>
+<line x1="14.0" y1="100.0" x2="9.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/><line x1="39.2" y1="39.2" x2="35.7" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="100.0" y1="14.0" x2="100.0" y2="9.0" stroke="#94a3b8" stroke-width="1"/><line x1="160.8" y1="39.2" x2="164.3" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="186.0" y1="100.0" x2="191.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="100.0" y="94" text-anchor="middle" font-size="30" font-weight="800" fill="#0f172a">99.95%</text>
+<text x="100.0" y="112" text-anchor="middle" font-size="10" font-weight="700" fill="#64748b">Availability (30d)</text>
+</svg><svg viewBox="0 0 200 126" width="100%" style="max-height:126px">
+<path d="M22.0 100.0 A78.0 78.0 0 0 1 178.0 100.0" fill="none" stroke="#eef2f7" stroke-width="15" stroke-linecap="round"/>
+<path d="M22.0 100.0 A78.0 78.0 0 0 1 71.3 27.5" fill="none" stroke="#f59e0b" stroke-width="15" stroke-linecap="round"/>
+<line x1="14.0" y1="100.0" x2="9.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/><line x1="39.2" y1="39.2" x2="35.7" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="100.0" y1="14.0" x2="100.0" y2="9.0" stroke="#94a3b8" stroke-width="1"/><line x1="160.8" y1="39.2" x2="164.3" y2="35.7" stroke="#94a3b8" stroke-width="1"/><line x1="186.0" y1="100.0" x2="191.0" y2="100.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="100.0" y="94" text-anchor="middle" font-size="30" font-weight="800" fill="#0f172a">38%</text>
+<text x="100.0" y="112" text-anchor="middle" font-size="10" font-weight="700" fill="#64748b">Error budget remaining</text>
+</svg></div></div>
+      <div class="card" style="flex:1"><h3>MTTR Trend <span class="tag">lower = better</span></h3><svg viewBox="0 0 400 158" width="100%"><line x1="38" y1="14.0" x2="386" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">90m</text><line x1="38" y1="43.5" x2="386" y2="43.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="46.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">68m</text><line x1="38" y1="73.0" x2="386" y2="73.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="76.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">45m</text><line x1="38" y1="102.5" x2="386" y2="102.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="105.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">22m</text><line x1="38" y1="132.0" x2="386" y2="132.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="135.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0m</text><line x1="38" y1="53.3" x2="386" y2="53.3" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="5 4"/><text x="386" y="49.3" text-anchor="end" font-size="8.5" fill="#b91c1c" font-weight="700">Target 60m</text><path d="M38.0 29.7 L107.6 38.9 L177.2 48.1 L246.8 59.9 L316.4 69.1 L386.0 76.9 L386.0 132.0 L38.0 132.0 Z" fill="#1d4ed8" opacity="0.10"/><path d="M38.0 29.7 L107.6 38.9 L177.2 48.1 L246.8 59.9 L316.4 69.1 L386.0 76.9" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="29.7" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="107.6" cy="38.9" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="177.2" cy="48.1" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="246.8" cy="59.9" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="316.4" cy="69.1" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="386.0" cy="76.9" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><text x="38.0" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Jan</text><text x="107.6" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Feb</text><text x="177.2" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Mar</text><text x="246.8" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Apr</text><text x="316.4" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">May</text><text x="386.0" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Jun</text></svg></div>
+      <div class="card" style="flex:1"><h3>Incident Trend by Severity</h3><svg viewBox="0 0 400 158" width="100%"><line x1="30" y1="12.0" x2="388" y2="12.0" stroke="#eaeef3" stroke-width="1"/><text x="24" y="15.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">12</text><line x1="30" y1="42.0" x2="388" y2="42.0" stroke="#eaeef3" stroke-width="1"/><text x="24" y="45.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">9</text><line x1="30" y1="72.0" x2="388" y2="72.0" stroke="#eaeef3" stroke-width="1"/><text x="24" y="75.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">6</text><line x1="30" y1="102.0" x2="388" y2="102.0" stroke="#eaeef3" stroke-width="1"/><text x="24" y="105.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">3</text><line x1="30" y1="132.0" x2="388" y2="132.0" stroke="#eaeef3" stroke-width="1"/><text x="24" y="135.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0</text><rect x="41.9" y="122.0" width="35.8" height="10.0" fill="#b91c1c"/><rect x="41.9" y="92.0" width="35.8" height="30.0" fill="#f59e0b"/><rect x="41.9" y="32.0" width="35.8" height="60.0" fill="#3b82f6"/><text x="59.8" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Jan</text><rect x="101.6" y="122.0" width="35.8" height="10.0" fill="#b91c1c"/><rect x="101.6" y="102.0" width="35.8" height="20.0" fill="#f59e0b"/><rect x="101.6" y="32.0" width="35.8" height="70.0" fill="#3b82f6"/><text x="119.5" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Feb</text><rect x="161.3" y="132.0" width="35.8" height="0.0" fill="#b91c1c"/><rect x="161.3" y="112.0" width="35.8" height="20.0" fill="#f59e0b"/><rect x="161.3" y="62.0" width="35.8" height="50.0" fill="#3b82f6"/><text x="179.2" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Mar</text><rect x="220.9" y="122.0" width="35.8" height="10.0" fill="#b91c1c"/><rect x="220.9" y="112.0" width="35.8" height="10.0" fill="#f59e0b"/><rect x="220.9" y="72.0" width="35.8" height="40.0" fill="#3b82f6"/><text x="238.8" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Apr</text><rect x="280.6" y="132.0" width="35.8" height="0.0" fill="#b91c1c"/><rect x="280.6" y="112.0" width="35.8" height="20.0" fill="#f59e0b"/><rect x="280.6" y="72.0" width="35.8" height="40.0" fill="#3b82f6"/><text x="298.5" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">May</text><rect x="340.3" y="132.0" width="35.8" height="0.0" fill="#b91c1c"/><rect x="340.3" y="122.0" width="35.8" height="10.0" fill="#f59e0b"/><rect x="340.3" y="92.0" width="35.8" height="30.0" fill="#3b82f6"/><text x="358.2" y="150" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Jun</text></svg>
+        <div class="legend"><span><span class="dot" style="background:#b91c1c"></span>Sev1</span><span><span class="dot" style="background:#f59e0b"></span>Sev2</span><span><span class="dot" style="background:#3b82f6"></span>Sev3</span></div></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:1"><h3>Error Budget Burn-down (30d)</h3><svg viewBox="0 0 420 160" width="100%"><line x1="38" y1="14.0" x2="406" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">100%</text><line x1="38" y1="44.0" x2="406" y2="44.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="47.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">75%</text><line x1="38" y1="74.0" x2="406" y2="74.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="77.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">50%</text><line x1="38" y1="104.0" x2="406" y2="104.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="107.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">25%</text><line x1="38" y1="134.0" x2="406" y2="134.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="137.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0%</text><path d="M38.0 14.0 L90.6 28.4 L143.1 39.2 L195.7 48.8 L248.3 62.0 L300.9 71.6 L353.4 80.0 L406.0 88.4" fill="none" stroke="#0d9488" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="14.0" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="90.6" cy="28.4" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="143.1" cy="39.2" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="195.7" cy="48.8" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="248.3" cy="62.0" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="300.9" cy="71.6" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="353.4" cy="80.0" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="406.0" cy="88.4" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><path d="M38.0 14.0 L90.6 29.6 L143.1 44.0 L195.7 59.6 L248.3 74.0 L300.9 89.6 L353.4 104.0 L406.0 119.6" fill="none" stroke="#cbd5e1" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="14.0" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="90.6" cy="29.6" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="143.1" cy="44.0" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="195.7" cy="59.6" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="248.3" cy="74.0" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="300.9" cy="89.6" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="353.4" cy="104.0" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><circle cx="406.0" cy="119.6" r="2.6" fill="#fff" stroke="#cbd5e1" stroke-width="1.8"/><text x="38.0" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W1</text><text x="90.6" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W2</text><text x="143.1" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W3</text><text x="195.7" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W4</text><text x="248.3" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W5</text><text x="300.9" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W6</text><text x="353.4" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W7</text><text x="406.0" y="152" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W8</text></svg>
+        <div class="legend"><span><span class="dot" style="background:#0d9488"></span>Actual remaining</span><span><span class="dot" style="background:#cbd5e1"></span>Ideal burn</span></div>
+        <p class="note" style="margin-top:4px">Burning slower than ideal — budget is healthy; release velocity sustainable.</p></div>
+      <div class="card" style="flex:1.3"><h3>SLO Compliance by Service <span class="tag">availability / SLO / budget left</span></h3>
+        <table><thead><tr><th>Service</th><th>Avail</th><th>SLO</th><th>Budget</th></tr></thead><tbody><tr><td><b>Core Banking API</b></td><td class="bignum">99.98%</td><td style="color:#64748b">99.95%</td><td><span class="badge b-green">62%</span></td></tr><tr><td><b>Payments Service</b></td><td class="bignum">99.96%</td><td style="color:#64748b">99.95%</td><td><span class="badge b-green">44%</span></td></tr><tr><td><b>Auth / Identity</b></td><td class="bignum">99.99%</td><td style="color:#64748b">99.99%</td><td><span class="badge b-amber">18%</span></td></tr><tr><td><b>Statements</b></td><td class="bignum">99.93%</td><td style="color:#64748b">99.90%</td><td><span class="badge b-green">55%</span></td></tr><tr><td><b>Notifications</b></td><td class="bignum">99.91%</td><td style="color:#64748b">99.90%</td><td><span class="badge b-amber">21%</span></td></tr><tr><td><b>Web Frontend</b></td><td class="bignum">99.97%</td><td style="color:#64748b">99.95%</td><td><span class="badge b-green">58%</span></td></tr><tr><td><b>Mobile BFF</b></td><td class="bignum">99.95%</td><td style="color:#64748b">99.95%</td><td><span class="badge b-red">9%</span></td></tr></tbody></table>
+        <p class="note" style="margin-top:5px">Mobile BFF at 9% budget — flagged for reliability review before next release.</p></div>
+    </div></div>
+<div class="footer">
+  <span>Northwind Financial — Confidential · Quality Engineering Office of the VP</span>
+  <span class="conf">SLA/SLO · MTTR · MTBF · Error Budget</span>
+  <span>Q2 FY26 · Dashboard 4 of 6 · Data as of 28 Jun 2026</span>
+</div>
+</div></body></html>

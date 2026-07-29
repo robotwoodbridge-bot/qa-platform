@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-Guidance for Claude Code (and other AI agents) working in this repository.
+Guidance for Codex (and other AI agents) working in this repository.
 See [README.md](README.md) for the project overview and repo layout first.
 
 ## What this is
@@ -168,8 +168,8 @@ removed.
 
 ## AI agents (`ai/`)
 
-Specialist subagents exist for both Claude Code (`ai/.claude/agents/`,
-`ai/.claude/skills/`) and Codex (`ai/.codex/agents/`) — kept in sync as pairs,
+Specialist subagents exist for both Codex (`ai/.Codex/agents/`,
+`ai/.Codex/skills/`) and Codex (`ai/.codex/agents/`) — kept in sync as pairs,
 same names/scopes. Current specialists: `qe-lead` (planning/strategy,
 coordinates the others), `automation-specialist`, `api-specialist`,
 `contract-testing-specialist`, `performance-specialist`,
@@ -177,7 +177,7 @@ coordinates the others), `automation-specialist`, `api-specialist`,
 `compliance-specialist`, `SRE-specialist`, `chaos-engineering-specialist`,
 `observability-specialist`, `ai-testing-specialist`,
 `quality-engineer-specialist`, `daily_standup_specialist`. When adding a new
-one, add both the Claude Code and Codex versions together.
+one, add both the Codex and Codex versions together.
 
 ## Working conventions
 

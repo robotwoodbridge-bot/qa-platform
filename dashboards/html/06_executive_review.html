@@ -1,0 +1,134 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: 13.33in 7.5in; margin: 0; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  color: #0f172a; background: #eef2f7;
+}
+.page {
+  width: 13.33in; height: 7.5in; position: relative; overflow: hidden;
+  background: #eef2f7; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.hdr {
+  background: linear-gradient(110deg, #1e3a8a 0%, #1d4ed8 62%, #3b82f6 100%);
+  color: #fff; padding: 16px 26px 15px; display: flex; align-items: center;
+  justify-content: space-between; position: relative;
+}
+.hdr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6); }
+.hdr .eyebrow { font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  opacity: .82; font-weight: 700; }
+.hdr h1 { font-size: 23px; font-weight: 800; letter-spacing: -.3px; margin-top: 3px; }
+.hdr .org { font-size: 11px; opacity: .85; margin-top: 4px; font-weight: 500; }
+.hdr .meta { text-align: right; font-size: 11px; line-height: 1.55; opacity: .92; }
+.hdr .meta b { font-weight: 700; }
+.statuspill { display:inline-flex; align-items:center; gap:7px; padding: 7px 15px;
+  border-radius: 999px; font-weight: 800; font-size: 13px; letter-spacing:.4px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); margin-top:7px;}
+.dot { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+.body { flex: 1; padding: 13px 18px 8px; display: flex; flex-direction: column; gap: 11px; }
+.row { display: flex; gap: 11px; }
+.col { display: flex; flex-direction: column; gap: 11px; }
+.card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 11px;
+  padding: 12px 14px; position: relative; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.card h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #64748b; font-weight: 700; margin-bottom: 9px; display:flex;
+  justify-content:space-between; align-items:center; }
+.card h3 .tag { font-size: 9px; letter-spacing:.4px; padding:2px 7px; border-radius:5px;
+  background:#eef2f7; color:#334155; font-weight:700; text-transform:none; }
+.kpi { flex:1; background: #ffffff; border:1px solid #e2e8f0; border-radius: 11px;
+  padding: 11px 13px; position: relative; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04);}
+.kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#1d4ed8; }
+.kpi .label { font-size: 9.5px; text-transform: uppercase; letter-spacing: .8px;
+  color: #64748b; font-weight: 700; }
+.kpi .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 3px; line-height:1; }
+.kpi .val small { font-size: 13px; font-weight: 700; color:#64748b; }
+.kpi .sub { font-size: 10px; color: #64748b; margin-top: 4px; font-weight:600; }
+.kpi .trend { position:absolute; top:11px; right:12px; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius: 6px; }
+.up { color:#15803d; background: #e7f6ec; } .down { color:#b91c1c; background:#fdeaea; }
+.flat { color:#64748b; background:#eef2f7; }
+table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+th { text-align: left; color: #64748b; font-weight: 700; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .6px; padding: 4px 7px; border-bottom: 1.5px solid #e2e8f0; }
+td { padding: 5px 7px; border-bottom: 1px solid #eaeef3; color: #334155; font-weight:500; }
+tr:last-child td { border-bottom: none; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9.5px; font-weight: 800; }
+.b-green{ background:#e7f6ec; color:#15803d;} .b-amber{ background:#fef3e2; color:#b45309;}
+.b-red{ background:#fdeaea; color:#b91c1c;} .b-blue{ background:#e6efff; color:#1d4ed8;}
+.b-grey{ background:#eef2f7; color:#334155;}
+.gate { display:flex; align-items:center; justify-content:space-between; padding: 6px 0;
+  border-bottom: 1px solid #eaeef3; font-size: 11px; }
+.gate:last-child{ border-bottom:none; }
+.gate .gname { font-weight:600; color:#334155; }
+.gate .gval { font-weight:800; color:#0f172a; font-variant-numeric: tabular-nums; }
+.legend { display:flex; gap:13px; flex-wrap:wrap; font-size:9.5px; color:#64748b; font-weight:600; margin-top:5px;}
+.legend span { display:flex; align-items:center; gap:5px; }
+.footer { display:flex; justify-content:space-between; align-items:center;
+  padding: 5px 22px 8px; font-size: 9px; color: #94a3b8; font-weight:600; letter-spacing:.3px; }
+.footer .conf { color:#b45309; }
+.bignum { font-variant-numeric: tabular-nums; }
+.hbar-track { background:#eef2f7; border-radius:6px; height:9px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:6px; }
+.note { font-size:9.5px; color:#64748b; line-height:1.5; }
+.ribbon { display:flex; gap:8px; }
+ul.clean { list-style:none; }
+ul.clean li { font-size:10.5px; color:#334155; padding:4px 0 4px 16px; position:relative; line-height:1.4; font-weight:500;}
+ul.clean li::before { content:""; position:absolute; left:0; top:9px; width:7px; height:7px; border-radius:2px; background:#3b82f6; }
+ul.clean li.win::before{ background:#22c55e; } ul.clean li.risk::before{ background:#f59e0b; }
+ul.clean li.watch::before{ background:#ef4444; }
+</style></head><body><div class="page">
+<div class="hdr">
+  <div>
+    <div class="eyebrow">Office of the VP — Quarterly Business Review</div>
+    <h1>Executive Quarterly Quality Review</h1>
+    <div class="org">Northwind Financial &nbsp;·&nbsp; Global Quality Engineering</div>
+  </div>
+  <div class="meta"><b>Audience:</b> VP / CIO · QBR<br><b>Period:</b> Q2 FY26 (Apr–Jun)<br><div class="statuspill"><span class="dot" style="background:#22c55e"></span>ON TRACK</div></div>
+</div>
+<div class="body">
+    <div class="row">
+      <style>.kpi-5222::before{background:#1d4ed8}</style><div class="kpi kpi-5222"><div class="label">Composite Quality Index</div><div class="val bignum">89<small>/100</small></div><div class="sub">board target 85 · exceeded</div><div class="trend up">+5 QoQ</div></div>
+      <style>.kpi-6599::before{background:#15803d}</style><div class="kpi kpi-6599"><div class="label">Availability</div><div class="val bignum">99.95<small>%</small></div><div class="sub">SLA honored · 0 breaches</div><div class="trend up">6 mo met</div></div>
+      <style>.kpi-1910::before{background:#0d9488}</style><div class="kpi kpi-1910"><div class="label">Customer Incidents</div><div class="val bignum">4</div><div class="sub">down from 8 last Q</div><div class="trend up">-40%</div></div>
+      <style>.kpi-3286::before{background:#f59e0b}</style><div class="kpi kpi-3286"><div class="label">Automation ROI</div><div class="val bignum">$9.6<small>M</small></div><div class="sub">annualized cost avoidance</div><div class="trend up">+22%</div></div>
+      <style>.kpi-905::before{background:#7c3aed}</style><div class="kpi kpi-905"><div class="label">Delivery Tier</div><div class="val bignum">Elite</div><div class="sub">DORA — top 18% industry</div><div class="trend up">↑ tier</div></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:1.05"><h3>Composite Quality Index — 4 Quarter Trend</h3><svg viewBox="0 0 380 150" width="100%"><line x1="38" y1="14.0" x2="366" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">100</text><line x1="38" y1="41.5" x2="366" y2="41.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="44.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">90</text><line x1="38" y1="69.0" x2="366" y2="69.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="72.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">80</text><line x1="38" y1="96.5" x2="366" y2="96.5" stroke="#eaeef3" stroke-width="1"/><text x="32" y="99.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">70</text><line x1="38" y1="124.0" x2="366" y2="124.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="127.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">60</text><line x1="38" y1="55.2" x2="366" y2="55.2" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="5 4"/><text x="366" y="51.2" text-anchor="end" font-size="8.5" fill="#b91c1c" font-weight="700">Board target 85</text><path d="M38.0 91.0 L147.3 74.5 L256.7 58.0 L366.0 44.2 L366.0 124.0 L38.0 124.0 Z" fill="#1d4ed8" opacity="0.10"/><path d="M38.0 91.0 L147.3 74.5 L256.7 58.0 L366.0 44.2" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="91.0" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="147.3" cy="74.5" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="256.7" cy="58.0" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="366.0" cy="44.2" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><text x="38.0" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q3'25</text><text x="147.3" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q4'25</text><text x="256.7" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q1'26</text><text x="366.0" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q2'26</text></svg>
+        <p class="note" style="margin-top:3px">Blends DRE, availability, escaped-defect rate, automation &amp; DORA into one board-level score.</p></div>
+      <div class="card" style="flex:1.1"><h3>Strategic Quality KPIs — RAG Status</h3><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#22c55e"></span>Release Predictability</span><span style="font-weight:800;font-size:11px" class="bignum">94% <span class="badge b-green" style="margin-left:4px;font-size:8.5px">+9 pt</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#22c55e"></span>Production Availability</span><span style="font-weight:800;font-size:11px" class="bignum">99.95% <span class="badge b-green" style="margin-left:4px;font-size:8.5px">SLO met</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#22c55e"></span>Customer-Impacting Incidents</span><span style="font-weight:800;font-size:11px" class="bignum">4 <span class="badge b-green" style="margin-left:4px;font-size:8.5px">-40%</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#22c55e"></span>Escaped Defect Rate</span><span style="font-weight:800;font-size:11px" class="bignum">0.4/rel <span class="badge b-green" style="margin-left:4px;font-size:8.5px">-67%</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#f59e0b"></span>Automation Coverage</span><span style="font-weight:800;font-size:11px" class="bignum">78% <span class="badge b-amber" style="margin-left:4px;font-size:8.5px">+11 pt</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#f59e0b"></span>Security Posture (High+)</span><span style="font-weight:800;font-size:11px" class="bignum">2 open <span class="badge b-amber" style="margin-left:4px;font-size:8.5px">watch</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#22c55e"></span>DORA Classification</span><span style="font-weight:800;font-size:11px" class="bignum">Elite <span class="badge b-green" style="margin-left:4px;font-size:8.5px">↑ from High</span></span></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eaeef3"><span style="display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;color:#334155"><span class="dot" style="width:10px;height:10px;background:#22c55e"></span>Customer Quality NPS</span><span style="font-weight:800;font-size:11px" class="bignum">+61 <span class="badge b-green" style="margin-left:4px;font-size:8.5px">+8</span></span></div></div>
+      <div class="card" style="flex:1"><h3>Business Outcome — Cost Avoidance ($M / quarter)</h3><svg viewBox="0 0 360 150" width="100%"><line x1="34" y1="12.0" x2="348" y2="12.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="15.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">11M</text><line x1="34" y1="40.0" x2="348" y2="40.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="43.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">8M</text><line x1="34" y1="68.0" x2="348" y2="68.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="71.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">6M</text><line x1="34" y1="96.0" x2="348" y2="96.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="99.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">3M</text><line x1="34" y1="124.0" x2="348" y2="124.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="127.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0M</text><rect x="48.9" y="82.3" width="48.7" height="41.7" rx="3" fill="#22c55e"/><text x="73.2" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q3'25</text><rect x="127.4" y="64.9" width="48.7" height="59.1" rx="3" fill="#22c55e"/><text x="151.8" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q4'25</text><rect x="205.9" y="43.6" width="48.7" height="80.4" rx="3" fill="#22c55e"/><text x="230.2" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q1'26</text><rect x="284.4" y="26.3" width="48.7" height="97.7" rx="3" fill="#22c55e"/><text x="308.8" y="142" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">Q2'26</text></svg>
+        <p class="note" style="margin-top:3px">Automation + early defect removal avoided <b>$9.6M</b> in rework, incident &amp; downtime cost this quarter.</p></div>
+    </div>
+    <div class="row" style="flex:.95">
+      <div class="card" style="flex:1"><h3>Quarter Wins</h3>
+        <ul class="clean">
+          <li class="win">Achieved <b>DORA Elite</b> across the platform — first time in program history.</li>
+          <li class="win">Cut customer-impacting incidents <b>40%</b>; zero Sev1 in 3 of 6 months.</li>
+          <li class="win">Defect Removal Efficiency to <b>94%</b>; escaped defects down 82%.</li>
+          <li class="win">Release predictability <b>94%</b> — 17 of 18 trains shipped on date.</li>
+        </ul></div>
+      <div class="card" style="flex:1"><h3>Risks &amp; Watch Items</h3>
+        <ul class="clean">
+          <li class="risk">2 high-severity security findings open — hotfix train committed for July.</li>
+          <li class="risk">Mobile BFF error budget at 9% — reliability review scheduled.</li>
+          <li class="watch">UI/E2E automation at 61% — investment case approved for Q3.</li>
+        </ul></div>
+      <div class="card" style="flex:1"><h3>Q3 Strategic Focus</h3>
+        <ul class="clean">
+          <li>Shift-left security: SAST/DAST gates blocking, target 0 high at release.</li>
+          <li>Lift UI/E2E automation 61% → 75%; cut lead-time review stage in half.</li>
+          <li>Phase 3 AI: LLM-assisted test generation &amp; flaky-test auto-triage pilot.</li>
+          <li>Resilience: chaos-engineering program for top-7 services.</li>
+        </ul></div>
+    </div></div>
+<div class="footer">
+  <span>Northwind Financial — Confidential · Quality Engineering Office of the VP</span>
+  <span class="conf">One-page VP/CIO strategic summary</span>
+  <span>Q2 FY26 · Dashboard 6 of 6 · Data as of 28 Jun 2026</span>
+</div>
+</div></body></html>

@@ -1,0 +1,163 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: 13.33in 7.5in; margin: 0; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  color: #0f172a; background: #eef2f7;
+}
+.page {
+  width: 13.33in; height: 7.5in; position: relative; overflow: hidden;
+  background: #eef2f7; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.hdr {
+  background: linear-gradient(110deg, #1e3a8a 0%, #1d4ed8 62%, #3b82f6 100%);
+  color: #fff; padding: 16px 26px 15px; display: flex; align-items: center;
+  justify-content: space-between; position: relative;
+}
+.hdr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6); }
+.hdr .eyebrow { font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  opacity: .82; font-weight: 700; }
+.hdr h1 { font-size: 23px; font-weight: 800; letter-spacing: -.3px; margin-top: 3px; }
+.hdr .org { font-size: 11px; opacity: .85; margin-top: 4px; font-weight: 500; }
+.hdr .meta { text-align: right; font-size: 11px; line-height: 1.55; opacity: .92; }
+.hdr .meta b { font-weight: 700; }
+.statuspill { display:inline-flex; align-items:center; gap:7px; padding: 7px 15px;
+  border-radius: 999px; font-weight: 800; font-size: 13px; letter-spacing:.4px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); margin-top:7px;}
+.dot { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+.body { flex: 1; padding: 13px 18px 8px; display: flex; flex-direction: column; gap: 11px; }
+.row { display: flex; gap: 11px; }
+.col { display: flex; flex-direction: column; gap: 11px; }
+.card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 11px;
+  padding: 12px 14px; position: relative; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.card h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #64748b; font-weight: 700; margin-bottom: 9px; display:flex;
+  justify-content:space-between; align-items:center; }
+.card h3 .tag { font-size: 9px; letter-spacing:.4px; padding:2px 7px; border-radius:5px;
+  background:#eef2f7; color:#334155; font-weight:700; text-transform:none; }
+.kpi { flex:1; background: #ffffff; border:1px solid #e2e8f0; border-radius: 11px;
+  padding: 11px 13px; position: relative; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04);}
+.kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#1d4ed8; }
+.kpi .label { font-size: 9.5px; text-transform: uppercase; letter-spacing: .8px;
+  color: #64748b; font-weight: 700; }
+.kpi .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 3px; line-height:1; }
+.kpi .val small { font-size: 13px; font-weight: 700; color:#64748b; }
+.kpi .sub { font-size: 10px; color: #64748b; margin-top: 4px; font-weight:600; }
+.kpi .trend { position:absolute; top:11px; right:12px; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius: 6px; }
+.up { color:#15803d; background: #e7f6ec; } .down { color:#b91c1c; background:#fdeaea; }
+.flat { color:#64748b; background:#eef2f7; }
+table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+th { text-align: left; color: #64748b; font-weight: 700; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .6px; padding: 4px 7px; border-bottom: 1.5px solid #e2e8f0; }
+td { padding: 5px 7px; border-bottom: 1px solid #eaeef3; color: #334155; font-weight:500; }
+tr:last-child td { border-bottom: none; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9.5px; font-weight: 800; }
+.b-green{ background:#e7f6ec; color:#15803d;} .b-amber{ background:#fef3e2; color:#b45309;}
+.b-red{ background:#fdeaea; color:#b91c1c;} .b-blue{ background:#e6efff; color:#1d4ed8;}
+.b-grey{ background:#eef2f7; color:#334155;}
+.gate { display:flex; align-items:center; justify-content:space-between; padding: 6px 0;
+  border-bottom: 1px solid #eaeef3; font-size: 11px; }
+.gate:last-child{ border-bottom:none; }
+.gate .gname { font-weight:600; color:#334155; }
+.gate .gval { font-weight:800; color:#0f172a; font-variant-numeric: tabular-nums; }
+.legend { display:flex; gap:13px; flex-wrap:wrap; font-size:9.5px; color:#64748b; font-weight:600; margin-top:5px;}
+.legend span { display:flex; align-items:center; gap:5px; }
+.footer { display:flex; justify-content:space-between; align-items:center;
+  padding: 5px 22px 8px; font-size: 9px; color: #94a3b8; font-weight:600; letter-spacing:.3px; }
+.footer .conf { color:#b45309; }
+.bignum { font-variant-numeric: tabular-nums; }
+.hbar-track { background:#eef2f7; border-radius:6px; height:9px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:6px; }
+.note { font-size:9.5px; color:#64748b; line-height:1.5; }
+.ribbon { display:flex; gap:8px; }
+ul.clean { list-style:none; }
+ul.clean li { font-size:10.5px; color:#334155; padding:4px 0 4px 16px; position:relative; line-height:1.4; font-weight:500;}
+ul.clean li::before { content:""; position:absolute; left:0; top:9px; width:7px; height:7px; border-radius:2px; background:#3b82f6; }
+ul.clean li.win::before{ background:#22c55e; } ul.clean li.risk::before{ background:#f59e0b; }
+ul.clean li.watch::before{ background:#ef4444; }
+</style></head><body><div class="page">
+<div class="hdr">
+  <div>
+    <div class="eyebrow">DORA Delivery Metrics</div>
+    <h1>Engineering Quality Scorecard</h1>
+    <div class="org">Northwind Financial &nbsp;·&nbsp; Global Quality Engineering</div>
+  </div>
+  <div class="meta"><b>Framework:</b> DORA · 90-day window<br><b>Benchmark:</b> 2023 State of DevOps<br><div class="statuspill"><span class="dot" style="background:#22c55e"></span>ELITE</div></div>
+</div>
+<div class="body">
+    <div class="row">
+      <div class="card" style="flex:1;padding:11px 12px">
+          <div class="label" style="font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:#64748b;font-weight:700">Deployment Frequency</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px">
+            <span class="bignum" style="font-size:28px;font-weight:800;color:#0f172a">4.2</span>
+            <span style="font-size:12px;font-weight:700;color:#64748b">/day</span>
+            <span class="badge b-green" style="margin-left:auto;background:#15803d22;color:#15803d">Elite</span>
+          </div>
+          <div class="note" style="margin-bottom:7px">On-demand, multiple deploys/day</div>
+          <div style="display:flex;gap:3px"><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Low</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Medium</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">High</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#15803d;color:#fff">Elite</span></div></div>
+      <div class="card" style="flex:1;padding:11px 12px">
+          <div class="label" style="font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:#64748b;font-weight:700">Lead Time for Changes</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px">
+            <span class="bignum" style="font-size:28px;font-weight:800;color:#0f172a">18</span>
+            <span style="font-size:12px;font-weight:700;color:#64748b">hours</span>
+            <span class="badge b-green" style="margin-left:auto;background:#15803d22;color:#15803d">Elite</span>
+          </div>
+          <div class="note" style="margin-bottom:7px">Commit → production</div>
+          <div style="display:flex;gap:3px"><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Low</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Medium</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">High</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#15803d;color:#fff">Elite</span></div></div>
+      <div class="card" style="flex:1;padding:11px 12px">
+          <div class="label" style="font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:#64748b;font-weight:700">Change Failure Rate</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px">
+            <span class="bignum" style="font-size:28px;font-weight:800;color:#0f172a">9</span>
+            <span style="font-size:12px;font-weight:700;color:#64748b">%</span>
+            <span class="badge b-green" style="margin-left:auto;background:#15803d22;color:#15803d">Elite</span>
+          </div>
+          <div class="note" style="margin-bottom:7px">Deploys causing degradation</div>
+          <div style="display:flex;gap:3px"><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Low</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Medium</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">High</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#15803d;color:#fff">Elite</span></div></div>
+      <div class="card" style="flex:1;padding:11px 12px">
+          <div class="label" style="font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:#64748b;font-weight:700">Mean Time to Recovery</div>
+          <div style="display:flex;align-items:baseline;gap:6px;margin:4px 0 2px">
+            <span class="bignum" style="font-size:28px;font-weight:800;color:#0f172a">42</span>
+            <span style="font-size:12px;font-weight:700;color:#64748b">min</span>
+            <span class="badge b-green" style="margin-left:auto;background:#15803d22;color:#15803d">Elite</span>
+          </div>
+          <div class="note" style="margin-bottom:7px">Restore service after failure</div>
+          <div style="display:flex;gap:3px"><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Low</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">Medium</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#eef2f7;color:#94a3b8">High</span><span style="flex:1;text-align:center;font-size:8px;font-weight:800;padding:3px 0;border-radius:4px;background:#15803d;color:#fff">Elite</span></div></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:1"><h3>Deployment Frequency (deploys/week)</h3><svg viewBox="0 0 420 156" width="100%"><line x1="34" y1="12.0" x2="408" y2="12.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="15.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">36</text><line x1="34" y1="41.5" x2="408" y2="41.5" stroke="#eaeef3" stroke-width="1"/><text x="28" y="44.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">27</text><line x1="34" y1="71.0" x2="408" y2="71.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="74.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">18</text><line x1="34" y1="100.5" x2="408" y2="100.5" stroke="#eaeef3" stroke-width="1"/><text x="28" y="103.5" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">9</text><line x1="34" y1="130.0" x2="408" y2="130.0" stroke="#eaeef3" stroke-width="1"/><text x="28" y="133.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0</text><rect x="42.9" y="57.9" width="29.0" height="72.1" rx="3" fill="#3b82f6"/><text x="57.4" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W18</text><rect x="89.6" y="48.1" width="29.0" height="81.9" rx="3" fill="#3b82f6"/><text x="104.1" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W19</text><rect x="136.4" y="51.3" width="29.0" height="78.7" rx="3" fill="#3b82f6"/><text x="150.9" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W20</text><rect x="183.1" y="38.2" width="29.0" height="91.8" rx="3" fill="#3b82f6"/><text x="197.6" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W21</text><rect x="229.9" y="41.5" width="29.0" height="88.5" rx="3" fill="#3b82f6"/><text x="244.4" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W22</text><rect x="276.6" y="31.7" width="29.0" height="98.3" rx="3" fill="#3b82f6"/><text x="291.1" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W23</text><rect x="323.4" y="34.9" width="29.0" height="95.1" rx="3" fill="#3b82f6"/><text x="337.9" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W24</text><rect x="370.1" y="28.4" width="29.0" height="101.6" rx="3" fill="#3b82f6"/><text x="384.6" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W25</text></svg></div>
+      <div class="card" style="flex:1"><h3>Lead Time for Changes <span class="tag">lower = better</span></h3><svg viewBox="0 0 420 156" width="100%"><line x1="38" y1="14.0" x2="406" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">36h</text><line x1="38" y1="43.0" x2="406" y2="43.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="46.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">27h</text><line x1="38" y1="72.0" x2="406" y2="72.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="75.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">18h</text><line x1="38" y1="101.0" x2="406" y2="101.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="104.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">9h</text><line x1="38" y1="130.0" x2="406" y2="130.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="133.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0h</text><line x1="38" y1="52.7" x2="406" y2="52.7" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="5 4"/><text x="406" y="48.7" text-anchor="end" font-size="8.5" fill="#b91c1c" font-weight="700">Elite <24h</text><path d="M38.0 30.1 L90.6 39.8 L143.1 46.2 L195.7 55.9 L248.3 62.3 L300.9 65.6 L353.4 68.8 L406.0 72.0 L406.0 130.0 L38.0 130.0 Z" fill="#0d9488" opacity="0.10"/><path d="M38.0 30.1 L90.6 39.8 L143.1 46.2 L195.7 55.9 L248.3 62.3 L300.9 65.6 L353.4 68.8 L406.0 72.0" fill="none" stroke="#0d9488" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="30.1" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="90.6" cy="39.8" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="143.1" cy="46.2" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="195.7" cy="55.9" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="248.3" cy="62.3" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="300.9" cy="65.6" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="353.4" cy="68.8" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><circle cx="406.0" cy="72.0" r="2.6" fill="#fff" stroke="#0d9488" stroke-width="1.8"/><text x="38.0" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W18</text><text x="90.6" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W19</text><text x="143.1" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W20</text><text x="195.7" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W21</text><text x="248.3" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W22</text><text x="300.9" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W23</text><text x="353.4" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W24</text><text x="406.0" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W25</text></svg></div>
+      <div class="card" style="flex:1"><h3>Change Failure Rate <span class="tag">lower = better</span></h3><svg viewBox="0 0 420 156" width="100%"><line x1="38" y1="14.0" x2="406" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">20%</text><line x1="38" y1="43.0" x2="406" y2="43.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="46.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">15%</text><line x1="38" y1="72.0" x2="406" y2="72.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="75.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">10%</text><line x1="38" y1="101.0" x2="406" y2="101.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="104.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">5%</text><line x1="38" y1="130.0" x2="406" y2="130.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="133.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0%</text><line x1="38" y1="43.0" x2="406" y2="43.0" stroke="#ef4444" stroke-width="1.3" stroke-dasharray="5 4"/><text x="406" y="39.0" text-anchor="end" font-size="8.5" fill="#b91c1c" font-weight="700">Elite <15%</text><path d="M38.0 37.2 L90.6 43.0 L143.1 54.6 L195.7 60.4 L248.3 66.2 L300.9 72.0 L353.4 77.8 L406.0 77.8 L406.0 130.0 L38.0 130.0 Z" fill="#f59e0b" opacity="0.10"/><path d="M38.0 37.2 L90.6 43.0 L143.1 54.6 L195.7 60.4 L248.3 66.2 L300.9 72.0 L353.4 77.8 L406.0 77.8" fill="none" stroke="#f59e0b" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="37.2" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="90.6" cy="43.0" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="143.1" cy="54.6" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="195.7" cy="60.4" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="248.3" cy="66.2" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="300.9" cy="72.0" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="353.4" cy="77.8" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><circle cx="406.0" cy="77.8" r="2.6" fill="#fff" stroke="#f59e0b" stroke-width="1.8"/><text x="38.0" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W18</text><text x="90.6" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W19</text><text x="143.1" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W20</text><text x="195.7" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W21</text><text x="248.3" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W22</text><text x="300.9" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W23</text><text x="353.4" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W24</text><text x="406.0" y="148" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">W25</text></svg></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:1"><h3>Lead-Time Value-Stream Breakdown (18h total)</h3><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Coding → PR open</span><span class="bignum">4.2h</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:23%;background:#3b82f6"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Code review</span><span class="bignum">5.1h</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:28%;background:#7c3aed"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>CI build + test</span><span class="bignum">0.4h</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:2%;background:#0d9488"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Merge → deploy ready</span><span class="bignum">3.8h</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:21%;background:#f59e0b"></div></div></div><div style="margin:7px 0">
+<div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px">
+<span>Deploy + verify</span><span class="bignum">4.5h</span></div>
+<div class="hbar-track"><div class="hbar-fill" style="width:25%;background:#22c55e"></div></div></div>
+        <p class="note" style="margin-top:5px">Review + deploy-readiness are the largest stages — automation focus for next quarter.</p></div>
+      <div class="card" style="flex:1.4"><h3>DORA by Squad</h3>
+        <table><thead><tr><th>Squad</th><th>Deploy Freq</th><th>Lead Time</th><th>CFR</th><th>MTTR</th><th>Tier</th></tr></thead><tbody><tr><td><b>Payments</b></td><td class="bignum">5.1/d</td><td class="bignum">14h</td><td class="bignum">7%</td><td class="bignum">31m</td><td><span class="badge b-green">Elite</span></td></tr><tr><td><b>Core Banking</b></td><td class="bignum">3.8/d</td><td class="bignum">19h</td><td class="bignum">9%</td><td class="bignum">44m</td><td><span class="badge b-green">Elite</span></td></tr><tr><td><b>Identity</b></td><td class="bignum">4.6/d</td><td class="bignum">16h</td><td class="bignum">8%</td><td class="bignum">38m</td><td><span class="badge b-green">Elite</span></td></tr><tr><td><b>Statements</b></td><td class="bignum">2.9/d</td><td class="bignum">26h</td><td class="bignum">12%</td><td class="bignum">51m</td><td><span class="badge b-blue">High</span></td></tr><tr><td><b>Mobile</b></td><td class="bignum">3.2/d</td><td class="bignum">22h</td><td class="bignum">11%</td><td class="bignum">47m</td><td><span class="badge b-blue">High</span></td></tr></tbody></table>
+        <p class="note" style="margin-top:5px">3 of 5 squads at Elite; Statements &amp; Mobile one tier from Elite — lead-time automation in flight.</p></div>
+    </div></div>
+<div class="footer">
+  <span>Northwind Financial — Confidential · Quality Engineering Office of the VP</span>
+  <span class="conf">Velocity with stability — Elite performer</span>
+  <span>Q2 FY26 · Dashboard 5 of 6 · Data as of 28 Jun 2026</span>
+</div>
+</div></body></html>

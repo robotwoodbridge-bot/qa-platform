@@ -1,9 +1,13 @@
 # Tech Stack Standards
 
-- Testing engines / tools: TypeScript + Playwright (latest versions)
+- Testing engines / tools: TypeScript 7.0.2 (native/tsgo compiler) + Playwright
 - Infrastructure: Terraform (IaC)
 
 Update this file as stack decisions are made for other layers (CI/CD, dashboards, AI layer).
+
+Every TypeScript project in this repo extends the root `tsconfig.base.json`
+and shares the root `.vscode/settings.json` (enables tsgo) — see the
+"TypeScript" section of the root `README.md` and `CLAUDE.md`.
 
 ## API Protocol Tooling (TBD)
 

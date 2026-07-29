@@ -1,0 +1,132 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: 13.33in 7.5in; margin: 0; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  color: #0f172a; background: #eef2f7;
+}
+.page {
+  width: 13.33in; height: 7.5in; position: relative; overflow: hidden;
+  background: #eef2f7; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.hdr {
+  background: linear-gradient(110deg, #1e3a8a 0%, #1d4ed8 62%, #3b82f6 100%);
+  color: #fff; padding: 16px 26px 15px; display: flex; align-items: center;
+  justify-content: space-between; position: relative;
+}
+.hdr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6); }
+.hdr .eyebrow { font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  opacity: .82; font-weight: 700; }
+.hdr h1 { font-size: 23px; font-weight: 800; letter-spacing: -.3px; margin-top: 3px; }
+.hdr .org { font-size: 11px; opacity: .85; margin-top: 4px; font-weight: 500; }
+.hdr .meta { text-align: right; font-size: 11px; line-height: 1.55; opacity: .92; }
+.hdr .meta b { font-weight: 700; }
+.statuspill { display:inline-flex; align-items:center; gap:7px; padding: 7px 15px;
+  border-radius: 999px; font-weight: 800; font-size: 13px; letter-spacing:.4px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); margin-top:7px;}
+.dot { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+.body { flex: 1; padding: 13px 18px 8px; display: flex; flex-direction: column; gap: 11px; }
+.row { display: flex; gap: 11px; }
+.col { display: flex; flex-direction: column; gap: 11px; }
+.card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 11px;
+  padding: 12px 14px; position: relative; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.card h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #64748b; font-weight: 700; margin-bottom: 9px; display:flex;
+  justify-content:space-between; align-items:center; }
+.card h3 .tag { font-size: 9px; letter-spacing:.4px; padding:2px 7px; border-radius:5px;
+  background:#eef2f7; color:#334155; font-weight:700; text-transform:none; }
+.kpi { flex:1; background: #ffffff; border:1px solid #e2e8f0; border-radius: 11px;
+  padding: 11px 13px; position: relative; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04);}
+.kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#1d4ed8; }
+.kpi .label { font-size: 9.5px; text-transform: uppercase; letter-spacing: .8px;
+  color: #64748b; font-weight: 700; }
+.kpi .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 3px; line-height:1; }
+.kpi .val small { font-size: 13px; font-weight: 700; color:#64748b; }
+.kpi .sub { font-size: 10px; color: #64748b; margin-top: 4px; font-weight:600; }
+.kpi .trend { position:absolute; top:11px; right:12px; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius: 6px; }
+.up { color:#15803d; background: #e7f6ec; } .down { color:#b91c1c; background:#fdeaea; }
+.flat { color:#64748b; background:#eef2f7; }
+table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+th { text-align: left; color: #64748b; font-weight: 700; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .6px; padding: 4px 7px; border-bottom: 1.5px solid #e2e8f0; }
+td { padding: 5px 7px; border-bottom: 1px solid #eaeef3; color: #334155; font-weight:500; }
+tr:last-child td { border-bottom: none; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9.5px; font-weight: 800; }
+.b-green{ background:#e7f6ec; color:#15803d;} .b-amber{ background:#fef3e2; color:#b45309;}
+.b-red{ background:#fdeaea; color:#b91c1c;} .b-blue{ background:#e6efff; color:#1d4ed8;}
+.b-grey{ background:#eef2f7; color:#334155;}
+.gate { display:flex; align-items:center; justify-content:space-between; padding: 6px 0;
+  border-bottom: 1px solid #eaeef3; font-size: 11px; }
+.gate:last-child{ border-bottom:none; }
+.gate .gname { font-weight:600; color:#334155; }
+.gate .gval { font-weight:800; color:#0f172a; font-variant-numeric: tabular-nums; }
+.legend { display:flex; gap:13px; flex-wrap:wrap; font-size:9.5px; color:#64748b; font-weight:600; margin-top:5px;}
+.legend span { display:flex; align-items:center; gap:5px; }
+.footer { display:flex; justify-content:space-between; align-items:center;
+  padding: 5px 22px 8px; font-size: 9px; color: #94a3b8; font-weight:600; letter-spacing:.3px; }
+.footer .conf { color:#b45309; }
+.bignum { font-variant-numeric: tabular-nums; }
+.hbar-track { background:#eef2f7; border-radius:6px; height:9px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:6px; }
+.note { font-size:9.5px; color:#64748b; line-height:1.5; }
+.ribbon { display:flex; gap:8px; }
+ul.clean { list-style:none; }
+ul.clean li { font-size:10.5px; color:#334155; padding:4px 0 4px 16px; position:relative; line-height:1.4; font-weight:500;}
+ul.clean li::before { content:""; position:absolute; left:0; top:9px; width:7px; height:7px; border-radius:2px; background:#3b82f6; }
+ul.clean li.win::before{ background:#22c55e; } ul.clean li.risk::before{ background:#f59e0b; }
+ul.clean li.watch::before{ background:#ef4444; }
+</style></head><body><div class="page">
+<div class="hdr">
+  <div>
+    <div class="eyebrow">Service-Layer Quality — Reference</div>
+    <h1>API &amp; Serverless Test Strategy</h1>
+    <div class="org">Northwind Financial &nbsp;·&nbsp; Global Quality Engineering</div>
+  </div>
+  <div class="meta"><b>Layer:</b> Service / API tier<br><b>Applies to:</b> REST · GraphQL · event-driven<br><div class="statuspill"><span class="dot" style="background:#3b82f6"></span>STRATEGY</div></div>
+</div>
+<div class="body">
+    <div class="row" style="flex:0">
+      <div class="card" style="flex:1;border-top:3px solid #1d4ed8">
+        <div style="border-left:4px solid #1d4ed8;padding-left:9px;margin-bottom:8px"><div style="font-size:13px;font-weight:800;color:#0f172a">API Testing &mdash; verify the interface contract</div></div>
+        <div class="note" style="margin:-2px 0 6px"><b>Under test:</b> an always-on service endpoint (REST / GraphQL / gRPC).</div>
+        <ul class="clean" style="margin-top:-2px"><li>Functional / happy-path — endpoints return correct data</li><li>Schema &amp; contract — OpenAPI / Pact, no breaking changes</li><li>Negative &amp; boundary — bad input &rarr; correct 4xx</li><li>Auth &amp; authz — token, scope, <b>tenant isolation</b></li><li>Idempotency, pagination, filtering</li><li>Performance — latency, throughput, rate limits</li><li>Security — OWASP API Top 10 (BOLA, mass assignment)</li></ul>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px"><span class="badge b-grey" style="font-weight:600;font-size:9px">Robot Framework · RequestsLibrary</span><span class="badge b-grey" style="font-weight:600;font-size:9px">Postman / Newman</span><span class="badge b-grey" style="font-weight:600;font-size:9px">REST Assured</span><span class="badge b-grey" style="font-weight:600;font-size:9px">Pact</span><span class="badge b-grey" style="font-weight:600;font-size:9px">Schemathesis</span><span class="badge b-grey" style="font-weight:600;font-size:9px">k6</span><span class="badge b-grey" style="font-weight:600;font-size:9px">OWASP ZAP</span></div>
+      </div>
+      <div class="card" style="flex:1;border-top:3px solid #0d9488">
+        <div style="border-left:4px solid #0d9488;padding-left:9px;margin-bottom:8px"><div style="font-size:13px;font-weight:800;color:#0f172a">Serverless Testing &mdash; everything above, plus the runtime</div></div>
+        <div class="note" style="margin:-2px 0 6px"><b>Under test:</b> event-driven functions + managed services (Lambda / Azure Functions).</div>
+        <ul class="clean" style="margin-top:-2px"><li class="win">Trigger / event-shape — HTTP, queue, storage, timer, stream</li><li class="win">Handler unit — mock event object + mocked cloud SDK</li><li class="win">Local integration — emulate the cloud services</li><li class="win"><b>Idempotency &amp; retries</b> — DLQ + partial-batch failures</li><li class="win">Cold-start &amp; concurrency — perf under scale-from-zero</li><li class="win">IAM least-privilege — function permissions are correctness</li><li class="win">Eventual consistency — async assertions on side effects</li></ul>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px"><span class="badge b-grey" style="font-weight:600;font-size:9px">LocalStack</span><span class="badge b-grey" style="font-weight:600;font-size:9px">AWS SAM CLI</span><span class="badge b-grey" style="font-weight:600;font-size:9px">Serverless Framework</span><span class="badge b-grey" style="font-weight:600;font-size:9px">moto</span><span class="badge b-grey" style="font-weight:600;font-size:9px">Azurite</span><span class="badge b-grey" style="font-weight:600;font-size:9px">EventBridge schema registry</span><span class="badge b-grey" style="font-weight:600;font-size:9px">AWS Powertools</span></div>
+      </div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="card" style="flex:1.5"><h3>Coverage Matrix &mdash; same concern, what each layer adds
+        <span class="tag">blue = API testing &nbsp;·&nbsp; teal = serverless adds</span></h3>
+        <table><thead><tr><th style="width:18%">Quality concern</th><th style="width:34%">API testing checks</th><th>Serverless testing adds</th></tr></thead>
+        <tbody><tr><td><b style="color:#0f172a">Correctness</b></td><td><span class="badge b-blue" style="font-weight:600">status · schema · data</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ event shape per trigger</span></td></tr><tr><td><b style="color:#0f172a">Reliability</b></td><td><span class="badge b-blue" style="font-weight:600">retries · timeouts</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ idempotency · DLQ · partial batch</span></td></tr><tr><td><b style="color:#0f172a">Auth &amp; access</b></td><td><span class="badge b-blue" style="font-weight:600">token · scope · tenant</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ IAM least-privilege</span></td></tr><tr><td><b style="color:#0f172a">Performance</b></td><td><span class="badge b-blue" style="font-weight:600">latency · throughput · limits</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ cold start · concurrency caps</span></td></tr><tr><td><b style="color:#0f172a">State</b></td><td><span class="badge b-blue" style="font-weight:600">DB side-effects</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ eventual consistency · ephemeral</span></td></tr><tr><td><b style="color:#0f172a">Security</b></td><td><span class="badge b-blue" style="font-weight:600">OWASP API Top 10</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ function perms · secrets · cost guardrails</span></td></tr><tr><td><b style="color:#0f172a">Where it runs</b></td><td><span class="badge b-blue" style="font-weight:600">shared live test env</span></td><td><span class="badge b-grey" style="font-weight:600;background:#d9f2ee;color:#0d9488">+ local emulation &rarr; ephemeral cloud stack</span></td></tr></tbody></table></div>
+      <div class="card" style="flex:1"><h3>Where the tests run &mdash; the pyramid</h3><div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px"><span>Unit — handler logic</span><span style="color:#94a3b8;font-weight:600;font-size:9.5px">fast · mocked</span></div><div class="hbar-track" style="height:11px"><div class="hbar-fill" style="width:95%;background:#22c55e"></div></div></div><div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px"><span>Component / contract</span><span style="color:#94a3b8;font-weight:600;font-size:9.5px">Pact · schema</span></div><div class="hbar-track" style="height:11px"><div class="hbar-fill" style="width:80%;background:#3b82f6"></div></div></div><div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px"><span>Integration — emulated cloud</span><span style="color:#94a3b8;font-weight:600;font-size:9.5px">LocalStack · SAM</span></div><div class="hbar-track" style="height:11px"><div class="hbar-fill" style="width:60%;background:#0d9488"></div></div></div><div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px"><span>End-to-end — ephemeral stack</span><span style="color:#94a3b8;font-weight:600;font-size:9.5px">real triggers</span></div><div class="hbar-track" style="height:11px"><div class="hbar-fill" style="width:35%;background:#7c3aed"></div></div></div><div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:10.5px;font-weight:700;color:#334155;margin-bottom:3px"><span>Non-functional — perf / sec / chaos</span><span style="color:#94a3b8;font-weight:600;font-size:9.5px">k6 · ZAP</span></div><div class="hbar-track" style="height:11px"><div class="hbar-fill" style="width:22%;background:#f59e0b"></div></div></div>
+        <p class="note" style="margin-top:6px">Heavy fast base (handler units), thin slow tip (E2E on a real stack).
+        Serverless pushes <b>integration</b> left via local cloud emulation.</p></div>
+    </div>
+    <div class="card" style="flex:0;background:linear-gradient(110deg,#eef4ff,#e6f6f3);border:1px solid #e2e8f0">
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="font-size:14px;font-weight:800;color:#1e3a8a;white-space:nowrap">Serverless = API testing&nbsp;+&nbsp;runtime</div>
+        <div class="note" style="flex:1">A serverless API needs <b>both</b> layers: the contract tests prove the interface is right;
+        the runtime tests prove events, retries, cold starts and IAM behave. They catch different defect classes &mdash; neither replaces the other.</div>
+        <div class="note" style="flex:1;border-left:1px solid #e2e8f0;padding-left:14px">
+        <b>In this lab:</b> <code>api-contract</code> (Pact/schema), <code>performance</code> (k6) and
+        <code>security</code> (ZAP) pipelines already cover the API tier &mdash; serverless adds an
+        emulated-integration + idempotency suite to the same CI.</div>
+      </div>
+    </div></div>
+<div class="footer">
+  <span>Northwind Financial — Confidential · Quality Engineering Office of the VP</span>
+  <span class="conf">Test types · tooling · CI mapping</span>
+  <span>Q2 FY26 · Dashboard 7 of 7 · Data as of 28 Jun 2026</span>
+</div>
+</div></body></html>

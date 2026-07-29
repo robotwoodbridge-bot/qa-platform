@@ -1,0 +1,125 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: 13.33in 7.5in; margin: 0; }
+html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  color: #0f172a; background: #eef2f7;
+}
+.page {
+  width: 13.33in; height: 7.5in; position: relative; overflow: hidden;
+  background: #eef2f7; display: flex; flex-direction: column;
+  page-break-after: always;
+}
+.hdr {
+  background: linear-gradient(110deg, #1e3a8a 0%, #1d4ed8 62%, #3b82f6 100%);
+  color: #fff; padding: 16px 26px 15px; display: flex; align-items: center;
+  justify-content: space-between; position: relative;
+}
+.hdr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background: linear-gradient(90deg,#f59e0b,#22c55e,#3b82f6); }
+.hdr .eyebrow { font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  opacity: .82; font-weight: 700; }
+.hdr h1 { font-size: 23px; font-weight: 800; letter-spacing: -.3px; margin-top: 3px; }
+.hdr .org { font-size: 11px; opacity: .85; margin-top: 4px; font-weight: 500; }
+.hdr .meta { text-align: right; font-size: 11px; line-height: 1.55; opacity: .92; }
+.hdr .meta b { font-weight: 700; }
+.statuspill { display:inline-flex; align-items:center; gap:7px; padding: 7px 15px;
+  border-radius: 999px; font-weight: 800; font-size: 13px; letter-spacing:.4px;
+  background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.5); margin-top:7px;}
+.dot { width: 9px; height: 9px; border-radius: 50%; display:inline-block; }
+.body { flex: 1; padding: 13px 18px 8px; display: flex; flex-direction: column; gap: 11px; }
+.row { display: flex; gap: 11px; }
+.col { display: flex; flex-direction: column; gap: 11px; }
+.card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 11px;
+  padding: 12px 14px; position: relative; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+.card h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.1px;
+  color: #64748b; font-weight: 700; margin-bottom: 9px; display:flex;
+  justify-content:space-between; align-items:center; }
+.card h3 .tag { font-size: 9px; letter-spacing:.4px; padding:2px 7px; border-radius:5px;
+  background:#eef2f7; color:#334155; font-weight:700; text-transform:none; }
+.kpi { flex:1; background: #ffffff; border:1px solid #e2e8f0; border-radius: 11px;
+  padding: 11px 13px; position: relative; overflow:hidden; box-shadow:0 1px 2px rgba(15,23,42,.04);}
+.kpi::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:#1d4ed8; }
+.kpi .label { font-size: 9.5px; text-transform: uppercase; letter-spacing: .8px;
+  color: #64748b; font-weight: 700; }
+.kpi .val { font-size: 27px; font-weight: 800; letter-spacing: -.6px; margin-top: 3px; line-height:1; }
+.kpi .val small { font-size: 13px; font-weight: 700; color:#64748b; }
+.kpi .sub { font-size: 10px; color: #64748b; margin-top: 4px; font-weight:600; }
+.kpi .trend { position:absolute; top:11px; right:12px; font-size:10px; font-weight:800;
+  padding:2px 7px; border-radius: 6px; }
+.up { color:#15803d; background: #e7f6ec; } .down { color:#b91c1c; background:#fdeaea; }
+.flat { color:#64748b; background:#eef2f7; }
+table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+th { text-align: left; color: #64748b; font-weight: 700; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .6px; padding: 4px 7px; border-bottom: 1.5px solid #e2e8f0; }
+td { padding: 5px 7px; border-bottom: 1px solid #eaeef3; color: #334155; font-weight:500; }
+tr:last-child td { border-bottom: none; }
+.badge { display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 9.5px; font-weight: 800; }
+.b-green{ background:#e7f6ec; color:#15803d;} .b-amber{ background:#fef3e2; color:#b45309;}
+.b-red{ background:#fdeaea; color:#b91c1c;} .b-blue{ background:#e6efff; color:#1d4ed8;}
+.b-grey{ background:#eef2f7; color:#334155;}
+.gate { display:flex; align-items:center; justify-content:space-between; padding: 6px 0;
+  border-bottom: 1px solid #eaeef3; font-size: 11px; }
+.gate:last-child{ border-bottom:none; }
+.gate .gname { font-weight:600; color:#334155; }
+.gate .gval { font-weight:800; color:#0f172a; font-variant-numeric: tabular-nums; }
+.legend { display:flex; gap:13px; flex-wrap:wrap; font-size:9.5px; color:#64748b; font-weight:600; margin-top:5px;}
+.legend span { display:flex; align-items:center; gap:5px; }
+.footer { display:flex; justify-content:space-between; align-items:center;
+  padding: 5px 22px 8px; font-size: 9px; color: #94a3b8; font-weight:600; letter-spacing:.3px; }
+.footer .conf { color:#b45309; }
+.bignum { font-variant-numeric: tabular-nums; }
+.hbar-track { background:#eef2f7; border-radius:6px; height:9px; overflow:hidden; }
+.hbar-fill { height:100%; border-radius:6px; }
+.note { font-size:9.5px; color:#64748b; line-height:1.5; }
+.ribbon { display:flex; gap:8px; }
+ul.clean { list-style:none; }
+ul.clean li { font-size:10.5px; color:#334155; padding:4px 0 4px 16px; position:relative; line-height:1.4; font-weight:500;}
+ul.clean li::before { content:""; position:absolute; left:0; top:9px; width:7px; height:7px; border-radius:2px; background:#3b82f6; }
+ul.clean li.win::before{ background:#22c55e; } ul.clean li.risk::before{ background:#f59e0b; }
+ul.clean li.watch::before{ background:#ef4444; }
+</style></head><body><div class="page">
+<div class="hdr">
+  <div>
+    <div class="eyebrow">Release Decision Brief</div>
+    <h1>Release Readiness — GO / NO-GO</h1>
+    <div class="org">Northwind Financial &nbsp;·&nbsp; Global Quality Engineering</div>
+  </div>
+  <div class="meta"><b>Release:</b> Atlas 24.2 &nbsp;·&nbsp; <b>Target:</b> 02 Jul 2026<br><b>Train:</b> Production · Wave 1 (NA/EU)<br><div class="statuspill"><span class="dot" style="background:#f59e0b"></span>GO &nbsp;WITH&nbsp;RISK</div></div>
+</div>
+<div class="body">
+    <div class="row" style="gap:11px">
+      <style>.kpi-2670::before{background:#f59e0b}</style><div class="kpi kpi-2670"><div class="label">Readiness Score</div><div class="val bignum">87<small>/100</small></div><div class="sub">Weighted gate composite</div><div class="trend up">+6 vs 24.1</div></div>
+      <style>.kpi-6251::before{background:#15803d}</style><div class="kpi kpi-6251"><div class="label">Test Pass Rate</div><div class="val bignum">98.4<small>%</small></div><div class="sub">4,812 / 4,890 passed</div><div class="trend up">+0.7 pt</div></div>
+      <style>.kpi-8507::before{background:#15803d}</style><div class="kpi kpi-8507"><div class="label">Open Defects</div><div class="val bignum">3<small> High</small></div><div class="sub">0 blocker · 0 critical</div><div class="trend up">-55 in 14d</div></div>
+      <style>.kpi-3965::before{background:#1d4ed8}</style><div class="kpi kpi-3965"><div class="label">Req. Coverage</div><div class="val bignum">96<small>%</small></div><div class="sub">312 / 325 requirements</div><div class="trend up">+3 pt</div></div>
+      <style>.kpi-1394::before{background:#f59e0b}</style><div class="kpi kpi-1394"><div class="label">Security Gate</div><div class="val bignum">2<small> High</small></div><div class="sub">0 critical open</div><div class="trend down">Action req.</div></div>
+    </div>
+    <div class="row" style="flex:1">
+      <div class="col" style="flex:1.15">
+        <div class="card" style="flex:1"><h3>Release Gate Scorecard <span class="tag">8 / 10 met</span></h3><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Test pass rate</span><span class="gval">98.4% <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ ≥ 98.0%</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Blocker / Critical defects open</span><span class="gval">0 <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ = 0</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>High-severity defects open</span><span class="gval">3 <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ ≤ 5</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Requirements coverage</span><span class="gval">96% <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ ≥ 95%</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Regression suite executed</span><span class="gval">100% <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ = 100%</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Automation pass rate</span><span class="gval">96.5% <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ ≥ 95%</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Code coverage (changed code)</span><span class="gval">84% <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ ≥ 80%</span></span></div><div class="gate"><span class="gname"><span class="badge b-green" style="margin-right:6px">✓</span>Performance budget (p95)</span><span class="gval">1.82s <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ ≤ 2.0s</span></span></div><div class="gate"><span class="gname"><span class="badge b-amber" style="margin-right:6px">!</span>Security — High vulns open</span><span class="gval">2 <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ = 0</span></span></div><div class="gate"><span class="gname"><span class="badge b-amber" style="margin-right:6px">!</span>Accessibility (WCAG AA)</span><span class="gval">1 open <span style="color:#94a3b8;font-weight:600;font-size:9.5px">/ = 0</span></span></div></div>
+      </div>
+      <div class="col" style="flex:1.25">
+        <div class="card"><h3>Defect Burndown — 14 day countdown</h3><svg viewBox="0 0 540 168" width="100%"><line x1="38" y1="14.0" x2="526" y2="14.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="17.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">58</text><line x1="38" y1="46.0" x2="526" y2="46.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="49.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">44</text><line x1="38" y1="78.0" x2="526" y2="78.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="81.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">29</text><line x1="38" y1="110.0" x2="526" y2="110.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="113.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">14</text><line x1="38" y1="142.0" x2="526" y2="142.0" stroke="#eaeef3" stroke-width="1"/><text x="32" y="145.0" text-anchor="end" font-size="8.5" fill="#94a3b8" font-weight="600">0</text><path d="M38.0 14.0 L107.7 33.9 L177.4 51.5 L247.1 75.8 L316.9 93.4 L386.6 111.1 L456.3 126.6 L526.0 135.4 L526.0 142.0 L38.0 142.0 Z" fill="#1d4ed8" opacity="0.10"/><path d="M38.0 14.0 L107.7 33.9 L177.4 51.5 L247.1 75.8 L316.9 93.4 L386.6 111.1 L456.3 126.6 L526.0 135.4" fill="none" stroke="#1d4ed8" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="14.0" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="107.7" cy="33.9" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="177.4" cy="51.5" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="247.1" cy="75.8" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="316.9" cy="93.4" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="386.6" cy="111.1" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="456.3" cy="126.6" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><circle cx="526.0" cy="135.4" r="2.6" fill="#fff" stroke="#1d4ed8" stroke-width="1.8"/><path d="M38.0 122.1 L107.7 126.6 L177.4 131.0 L247.1 135.4 L316.9 137.6 L386.6 139.8 L456.3 142.0 L526.0 142.0 L526.0 142.0 L38.0 142.0 Z" fill="#ef4444" opacity="0.10"/><path d="M38.0 122.1 L107.7 126.6 L177.4 131.0 L247.1 135.4 L316.9 137.6 L386.6 139.8 L456.3 142.0 L526.0 142.0" fill="none" stroke="#ef4444" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="38.0" cy="122.1" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="107.7" cy="126.6" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="177.4" cy="131.0" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="247.1" cy="135.4" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="316.9" cy="137.6" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="386.6" cy="139.8" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="456.3" cy="142.0" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><circle cx="526.0" cy="142.0" r="2.6" fill="#fff" stroke="#ef4444" stroke-width="1.8"/><text x="38.0" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-14</text><text x="107.7" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-12</text><text x="177.4" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-10</text><text x="247.1" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-8</text><text x="316.9" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-6</text><text x="386.6" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-4</text><text x="456.3" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-2</text><text x="526.0" y="160" text-anchor="middle" font-size="8.5" fill="#64748b" font-weight="600">D-0</text></svg><div class="legend"><span><span class="dot" style="background:#1d4ed8"></span>Open defects</span><span><span class="dot" style="background:#ef4444"></span>Blocker/Critical</span></div></div>
+        <div class="card" style="flex:1"><h3>Open Risks &amp; Mitigations</h3>
+          <table><thead><tr><th>ID</th><th>Risk</th><th>Sev</th><th>Mitigation</th></tr></thead><tbody><tr><td><b>SEC-2291</b></td><td>Auth token rotation — 2 high CVEs in 3rd-party lib</td><td><span class="badge b-amber">High</span></td><td style="color:#64748b">Patch in 24.2.1 hotfix; WAF rule deployed as compensating control</td></tr><tr><td><b>A11Y-118</b></td><td>Statement export modal fails AA contrast</td><td><span class="badge b-amber">Medium</span></td><td style="color:#64748b">Fix scheduled D+3; <2% of users on path</td></tr><tr><td><b>PERF-77</b></td><td>Batch posting p99 spike under peak load</td><td><span class="badge b-green">Low</span></td><td style="color:#64748b">Within budget at p95; capacity headroom verified</td></tr></tbody></table></div>
+      </div>
+      <div class="col" style="flex:.8">
+        <div class="card"><h3>Stakeholder Sign-off</h3><div class="gate" style="padding:5px 0"><span class="gname">Quality Engineering</span><span class="badge b-green">Signed</span></div><div class="gate" style="padding:5px 0"><span class="gname">Product Management</span><span class="badge b-green">Signed</span></div><div class="gate" style="padding:5px 0"><span class="gname">Site Reliability (SRE)</span><span class="badge b-green">Signed</span></div><div class="gate" style="padding:5px 0"><span class="gname">Security / AppSec</span><span class="badge b-amber">Conditional</span></div><div class="gate" style="padding:5px 0"><span class="gname">Data / Privacy</span><span class="badge b-green">Signed</span></div><div class="gate" style="padding:5px 0"><span class="gname">Release Management</span><span class="badge b-amber">Pending</span></div></div>
+        <div class="card" style="flex:1"><h3>Recommendation</h3>
+          <div style="font-size:13px;font-weight:800;color:#b45309;margin-bottom:6px">CONDITIONAL GO</div>
+          <p class="note">Proceed to Wave 1 production with two conditions: (1) deploy 24.2.1 security
+          hotfix within 72h to close SEC-2291; (2) WAF compensating control active at cutover.
+          All functional, regression, performance and reliability gates are met. Blast radius limited
+          to NA/EU; instant rollback verified (4 min).</p>
+        </div>
+      </div>
+    </div></div>
+<div class="footer">
+  <span>Northwind Financial — Confidential · Quality Engineering Office of the VP</span>
+  <span class="conf">Decision owner: VP Quality Engineering</span>
+  <span>Q2 FY26 · Dashboard 1 of 6 · Data as of 28 Jun 2026</span>
+</div>
+</div></body></html>
